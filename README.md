@@ -26,6 +26,10 @@ Command line approch contains with
 - **Nonce (Number Used Once):** use for prevent replay request for PoW it used to check validity for miner who won puzzle solving as well
 - **Merkle Tree (data structure)** - use to check correctly of transaction in block and make sure that does not modified (a.k.a checksum) - some blockchain generate hash from merkle root
 
+## Important note
+
+- Python code indentation is the most significant. developers need to care about
+
 ## New things learned from python
 
 - **Variable:** assign variable python has no data type(weak type)
@@ -86,4 +90,46 @@ Command line approch contains with
   ```
 
   **Note:** Why function cannot change? because python always create local variable with variable declared inside function scope
+
 - **comment for document:** create comment by use """(triple double quotes)
+- **loop:** python contains for loop and while loop
+
+  ```
+    # iterate through elements list
+    for elem in list:
+      ...
+
+    # repeat code until true
+    while True:
+      ...
+  ```
+
+- **if-else:** condition like other language
+  ```
+    if condition:
+      ...
+    elif condition:
+      ...
+    else:
+      ...
+  ```
+- **continue-break:** this keyward will be in for-loop or while loop
+
+  ```
+    # end current iterate and continue iteration
+    continue
+
+    # end loop
+    break
+  ```
+
+- **not:** use for check in negative case work only string case
+  ```
+    if char not in str:
+      ...
+  ```
+- **and,or:** use for join condition, the result can check from truty table
+  ```
+    condition_1 and condition_2
+    condition_1 or condition_2
+  ```
