@@ -53,18 +53,32 @@ def print_instructions():
     print('Please choose')
     print('1: Add a new transaction value')
     print('2: Output the blockchain blocks')
+    print('h: Manipulate the chain')
     print('q: Quit')
 
 
 def print_blocks():
     """ Print blocks in blockchain """
+    print('full chain: ', blockchain)
     # outout of blockchain
     for block in blockchain:
         print('output block: ', block)
 
-
-tx_amount = get_transaction_value()
-add_transaction(tx_amount)
+def verify_chain():
+    block_index = 0
+    is_valid = True
+    for block in blockchain:
+        if block_index == 0:
+            block_index += 1
+            continue
+        # for test only when use 'h' option
+        elif block[0] == blockchain[block_index - 1]:
+            is_valid = True
+        else:
+            is_valid = False
+            break
+        block_index += 1
+    return is_valid
 
 # add many block we want
 while True:
@@ -75,10 +89,16 @@ while True:
         add_transaction(tx_amount, get_last_blockchain_value())
     elif user_choice == '2':
         print_blocks()
+    elif user_choice == 'h':
+        if len(blockchain) >= 1:
+            blockchain[0] = [2]
     elif user_choice == 'q':
         break
     else:
         print('Please input a valid input from choice')
-    print('Choice applied')
+    
+    if not verify_chain():
+        print('Invalid chain!')
+        break
 
 print('Finished')

@@ -26,6 +26,8 @@ Command line approch contains with
 - **Nonce (Number Used Once):** use for prevent replay request for PoW it used to check validity for miner who won puzzle solving as well
 - **Merkle Tree (data structure)** - use to check correctly of transaction in block and make sure that does not modified (a.k.a checksum) - some blockchain generate hash from merkle root
 
+- **Maniplate the chain** the blockchain does not allow to modify some data on the chain and the chain will invalid
+
 ## Important note
 
 - Python code indentation is the most significant. developers need to care about
@@ -133,3 +135,8 @@ Command line approch contains with
     condition_1 and condition_2
     condition_1 or condition_2
   ```
+- **grouping conditions:** conditions can be combined to check like
+  ```
+    (condition_1 {logic} condition_2) {logic} condition_3
+  ```
+- **switch case:** *there is no switch case on python use if-else instead*
