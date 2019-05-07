@@ -63,25 +63,30 @@ def print_blocks():
     # outout of blockchain
     for block in blockchain:
         print('output block: ', block)
+    else:
+        print('-' * 20)
+
 
 def verify_chain():
-    block_index = 0
+    # block_index = 0
     is_valid = True
-    for block in blockchain:
+    for block_index in range(len(blockchain)):
         if block_index == 0:
             block_index += 1
             continue
         # for test only when use 'h' option
-        elif block[0] == blockchain[block_index - 1]:
+        elif blockchain[block_index][0] == blockchain[block_index - 1]:
             is_valid = True
         else:
             is_valid = False
             break
-        block_index += 1
     return is_valid
 
+
+waiting_for_input = True
+
 # add many block we want
-while True:
+while waiting_for_input:
     print_instructions()
     user_choice = get_user_choice()
     if user_choice == '1':
@@ -93,12 +98,16 @@ while True:
         if len(blockchain) >= 1:
             blockchain[0] = [2]
     elif user_choice == 'q':
-        break
+        # change the value to break the loop
+        waiting_for_input = False
     else:
         print('Please input a valid input from choice')
-    
+
     if not verify_chain():
+        print_blocks()
         print('Invalid chain!')
         break
+else:
+    print('User left!')
 
 print('Finished')

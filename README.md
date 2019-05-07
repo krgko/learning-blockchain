@@ -27,6 +27,7 @@ Command line approch contains with
 - **Merkle Tree (data structure)** - use to check correctly of transaction in block and make sure that does not modified (a.k.a checksum) - some blockchain generate hash from merkle root
 
 - **Maniplate the chain** the blockchain does not allow to modify some data on the chain and the chain will invalid
+- **Blockchain verification** It use hash that calculate each block this will ensure that chain cannot manipulated
 
 ## Important note
 
@@ -140,3 +141,27 @@ Command line approch contains with
     (condition_1 {logic} condition_2) {logic} condition_3
   ```
 - **switch case:** *there is no switch case on python use if-else instead*
+- **is & in:** is - check are they really the same object, in - check is element in that data object or not
+  ```
+    test = [1, 2, 3]
+    test2 = [1, 2, 3]
+    
+    test is test2 # False
+    1 in test # True
+  ```
+- **For loop with else** else can added after loop so, it will do inside else after loop has been broken
+  ```
+    for {condition}:
+      # do stuff
+    else:
+      # do something
+  ```
+- **Range** because there is no `for(i = 0; i < 10; i++)` in python range *accept only integer*
+  ```
+    for element in range({number}):
+      # do stuff
+
+    for element in range({start}, {stop}, {step}):
+      # do stuff
+  ```
+- **While** loop as long as condition is *True*
