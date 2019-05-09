@@ -165,3 +165,45 @@ Command line approch contains with
       # do stuff
   ```
 - **While** loop as long as condition is *True*
+- **List and String**
+  ```
+    list = ['h', 'e']
+    text = 'he'
+
+    # can use with
+    for c in {list|string}:
+      print(c)
+    
+    # helper to know method able to use with
+    help({variable}) 
+  ```
+string does not support index assignment but list can
+- **Format** control the looks of print
+  ```
+    print('string: ' + {string} + 'int: ' + {int})
+
+    # unable to assign but need to casting as string first
+
+    'string: {} int: {}'.format('hello', 5)
+    # able to assign value
+
+    # can assign argument by index by
+    ...format('hello', 5)
+    # if reference {0} means 'hello'
+
+    # named argument
+    ...format(h='hello')
+    # ref {h} means 'hello'
+
+    # number
+    {:>3.5f}...format(1.23)
+    > means step space
+    # [][][]1.23000
+  ```
+ref: https://pyformat.info/
+*For python 3.6+*
+  ```
+    f'string: {a} int: {b}'
+  ```
+- **Escape String** can be use "'" double quote or '\'' backslash
+ref: https://docs.python.org/2.0/ref/strings.html
