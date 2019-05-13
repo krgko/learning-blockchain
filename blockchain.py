@@ -1,5 +1,12 @@
 # global scope variable - can call by anywhere
-blockchain = []
+genesis_block = {
+    'previous_hash': '',
+    'index': 0,
+    'transactions': []
+}
+blockchain = [genesis_block]
+open_transactions = []
+owner = 'Golf'  # person who send coin to others
 
 
 def get_last_blockchain_value():
@@ -23,28 +30,51 @@ def get_last_blockchain_value():
 
 
 # add default variable like javascript
-def add_transaction(transaction_amount, last_transaction=[0]):
+def add_transaction(recipient, amount=1.0, sender=owner):
     """ Append a new value to the blockchain
 
     Arguments:
-        :transaction_amount: The amount that will added into transaction
-        :last_transaction: The last blockchain transaction (default [0])
+        :sender: The sender of coins
+        :recipient: The recipient of coins
+        :amount: The amount of coins (default=1.0)
     """
-    if last_transaction == None:
-        last_transaction = [0]
 
-    blockchain.append([last_transaction, transaction_amount])
+    transaction = {
+        'sender': sender,
+        'recipient': recipient,
+        'amount': amount
+    }
+    open_transactions.append(transaction)
 
+
+def mine_block():
+    last_block = blockchain[-1]
+    hashed_block = ''
+
+    for key in last_block:
+        value = last_block[key]
+        hashed_block = hashed_block + str(value)
+
+    block = {
+        'previous_hash': hashed_block,
+        'index': len(blockchain),
+        'transactions': open_transactions
+    }
+    blockchain.append(block)
 
 # duplicate code must to stay as function
+
+
 def get_transaction_value():
     """ Returns the input of the user (new transaction amount) as a float """
-    return float(input('input amount: '))
+    tx_recipient = input('Recipient of transaction: ')
+    tx_amount = float(input('Input amount: '))
+    return tx_recipient, tx_amount
 
 
 def get_user_choice():
     """ Return the user's choice """
-    choice = input('choice: ')
+    choice = input('Choice: ')
     return choice
 
 
@@ -52,7 +82,8 @@ def print_instructions():
     """ Print instructions for user """
     print('Please choose')
     print('1: Add a new transaction value')
-    print('2: Output the blockchain blocks')
+    print('2: Mine a new block')
+    print('3: Output the blockchain blocks')
     print('h: Manipulate the chain')
     print('q: Quit')
 
@@ -90,9 +121,14 @@ while waiting_for_input:
     print_instructions()
     user_choice = get_user_choice()
     if user_choice == '1':
-        tx_amount = get_transaction_value()
-        add_transaction(tx_amount, get_last_blockchain_value())
+        # like destructure of javascript
+        recipient, amount = get_transaction_value()
+        # add the transaction to blockchain
+        add_transaction(recipient=recipient, amount=amount)
+        print(open_transactions)
     elif user_choice == '2':
+        mine_block()
+    elif user_choice == '3':
         print_blocks()
     elif user_choice == 'h':
         if len(blockchain) >= 1:
@@ -103,10 +139,10 @@ while waiting_for_input:
     else:
         print('Please input a valid input from choice')
 
-    if not verify_chain():
-        print_blocks()
-        print('Invalid chain!')
-        break
+    # if not verify_chain():
+    #     print_blocks()
+    #     print('Invalid chain!')
+    #     break
 else:
     print('User left!')
 

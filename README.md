@@ -20,14 +20,19 @@ Command line approch contains with
 ## Blockchain
 
 - **Transactions:** in this case it will store data like coin
-- **Blocks:** wrapper transaction(s) with header and append to chain
+    1. sender
+    2. recipient
+    3. amount/data
+- **Blocks:** wrapper transaction(s) with header and append to chain - occur by mining (put transactions and pack as block)
 - **Blockchain:** multiple block that appended start from first block(genesis block) like chain (data structure like link-list)
 - **Hash:** use for reference block like an id. it stored on header of block(previous hase, current hash)
 - **Nonce (Number Used Once):** use for prevent replay request for PoW it used to check validity for miner who won puzzle solving as well
 - **Merkle Tree (data structure)** - use to check correctly of transaction in block and make sure that does not modified (a.k.a checksum) - some blockchain generate hash from merkle root
+- **Data structure** - maybe key-store, ...
 
 - **Maniplate the chain** the blockchain does not allow to modify some data on the chain and the chain will invalid
 - **Blockchain verification** It use hash that calculate each block this will ensure that chain cannot manipulated
+- **To verify block hashes** Can check by try to create another set of hash as current_hash and reconcile with previous_hash
 
 ## Important note
 
@@ -207,3 +212,7 @@ ref: https://pyformat.info/
   ```
 - **Escape String** can be use "'" double quote or '\'' backslash
 ref: https://docs.python.org/2.0/ref/strings.html
+- **List** Mutable, one type `['x', 'y']`
+- **Set** Mutable, unorderered, no duplicate, one type `{'x', 'y'}`
+- **Tuple** Immutable, ordered, duplicated, multiple type `('x', 'y')`
+- **Dictionary** Mutable. unordered, no duplicate key like `json object`
