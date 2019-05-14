@@ -213,6 +213,29 @@ ref: https://pyformat.info/
 - **Escape String** can be use "'" double quote or '\'' backslash
 ref: https://docs.python.org/2.0/ref/strings.html
 - **List** Mutable, one type `['x', 'y']`
+  ```
+    # iteration example
+    for element in list:
+      new_list.append(element)
+
+    new_list = [el for el in list] # the result will be the same
+
+    new_list = [el for el in list if el % 2 == 0] # added if
+  ```
 - **Set** Mutable, unorderered, no duplicate, one type `{'x', 'y'}`
+  ```
+    test_set = set('xyz') # {'x', 'y', 'z'}
+    test_set2 = set(['xyz', 'abc']) # {'xyz', 'abc'}
+  ```
 - **Tuple** Immutable, ordered, duplicated, multiple type `('x', 'y')`
 - **Dictionary** Mutable. unordered, no duplicate key like `json object`
+  ```
+    test = [('a': 1), ('b': 2)]
+    # make a list to dictionary
+    dict_test = {key: value for (key, value) in test}
+  ```
+- **Enumerate** if in for loop it will return index and data of iteration
+  ```
+    for (index, data) in enumerate(list):
+      ... do stuff
+  ```
