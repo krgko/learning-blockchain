@@ -239,3 +239,25 @@ ref: https://docs.python.org/2.0/ref/strings.html
     for (index, data) in enumerate(list):
       ... do stuff
   ```
+- **Copiled other complex type** `the basic type` can coplied because it reference by value but `the complex type` reference by address (pass by reference) like pointer
+```
+  list = [A, B, C]
+  copied = list
+  copied = copied.append(Z)
+  # list = [A, B, C, Z]
+  # copied = [A, B, C, Z]
+
+  right_one = list[:] # copied all list - range selector
+  right_one = right_one.append(X)
+  # right_one = [A, B, C, X]
+  # list = [A, B, C, Z]
+  # copied = [A, B, C, Z]
+
+  # list [start:end] # print start to end - 1
+  # list [:-1] # print start to len(list) - 1
+
+  # note: it works with tuple as well (tuple = (1,2,3,4))
+  # sets (sets = {1,2,3,4}) does not work
+```
+- **Shallow vs deep copies** `list[:]` this is shallow copy bacause for the complex list like array of dictionary will not full copied
+Note: the inner data structures cannot copied
