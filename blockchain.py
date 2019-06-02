@@ -98,7 +98,7 @@ def mine_block():
     block = {
         'previous_hash': hashed_block,
         'index': len(blockchain),
-        'transactions': open_transactions
+        'transactions': copied_transactions
     }
     blockchain.append(block)
     return True
@@ -126,6 +126,7 @@ def print_instructions():
     print('2: Mine a new block')
     print('3: Output the blockchain blocks')
     print('4: Output participants')
+    print('5: Check transaction validlity')
     print('h: Manipulate the chain')
     print('q: Quit')
 
@@ -150,6 +151,11 @@ def verify_chain():
     return True
 
 
+def verify_transactions():
+    """ Verify transaction list """
+    return all([verify_transaction(tx) for tx in open_transactions])
+
+
 waiting_for_input = True
 
 # add many block we want
@@ -172,6 +178,11 @@ while waiting_for_input:
         print_blocks()
     elif user_choice == '4':
         print(participants)
+    elif user_choice == '5':
+        if verify_transactions():
+            print('All transactions valid')
+        else:
+            print('There is invalid transaction!')
     elif user_choice == 'h':
         if len(blockchain) >= 1:
             blockchain[0] = {

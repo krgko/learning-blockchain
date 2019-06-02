@@ -222,7 +222,7 @@ ref: https://docs.python.org/2.0/ref/strings.html
 
     new_list = [el for el in list if el % 2 == 0] # added if
   ```
-- **Set** Mutable, unorderered, no duplicate, one type `{'x', 'y'}`
+- **Set** Immutable, unorderered, no duplicate, one type `{'x', 'y'}`
   ```
     test_set = set('xyz') # {'x', 'y', 'z'}
     test_set2 = set(['xyz', 'abc']) # {'xyz', 'abc'}
@@ -261,3 +261,25 @@ ref: https://docs.python.org/2.0/ref/strings.html
 ```
 - **Shallow vs deep copies** `list[:]` this is shallow copy bacause for the complex list like array of dictionary will not full copied
 Note: the inner data structures cannot copied
+- **is and ==** `==` will check only value but `is` will check in address level if the same that means it is the same object
+**Note:** Trying by using data like list
+
+**Additional:** https://docs.python.org/3/tutorial/datastructures.html#dictionaries
+- **All and Any** By example or think it like `AND, OR`
+```
+  any([True, False, False]) # return True
+  all([True, False, False]) # return False
+
+  # Application
+  list = [-1, 2, 3, 4]
+  all([n > 0 for n in list])
+```
+- **Comparison between data structures**
+
+|  type/test |           list-comprehension ex. [e for e in set]           | iteration | indexing |      unpacking ex. a,b = list      |
+|:----------:|:-----------------------------------------------------------:|:---------:|:--------:|:----------------------------------:|
+|    list    |                              Y                              |     Y     |     Y    | Y (if unpack all element in there) |
+|     set    |                              Y                              |     Y     |     N    | Y (if unpack all element in there) |
+|    tuple   |                              Y                              |     Y     |     Y    | Y (if unpack all element in there) |
+| dictionary | Y (with items and while iterate need to use (index, value)) |     Y     |     Y    |        Y (return only keys)        |
+
