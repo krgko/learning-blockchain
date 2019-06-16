@@ -98,7 +98,7 @@ def mine_block():
     block = {
         'previous_hash': hashed_block,
         'index': len(blockchain),
-        'transactions': open_transactions
+        'transactions': copied_transactions
     }
     blockchain.append(block)
     return True
@@ -190,7 +190,7 @@ while waiting_for_input:
         print('Invalid chain!')
         break
 
-    print(get_balance(owner))
+    print('Balance of {} is {:.10}'.format(owner, str(get_balance(owner))))
 else:
     print('User left!')
 
