@@ -282,4 +282,40 @@ Note: the inner data structures cannot copied
 |     set    |                              Y                              |     Y     |     N    | Y (if unpack all element in there) |
 |    tuple   |                              Y                              |     Y     |     Y    | Y (if unpack all element in there) |
 | dictionary | Y (with items and while iterate need to use (index, value)) |     Y     |     Y    |        Y (return only keys)        |
+- **List comprehension**
+Use `map()` to iterate list with do something with it by function
+```
+  map({function}, {variable})
 
+  def mul(e): 
+    return e*2
+
+  list = [1,2,3]
+  list(map(mul, list)) # 2,4,6
+
+  # if does not use list casting it will return obj address
+```
+- **Lambda function**
+For above lecture section
+```
+  list(map(lamda el: el * 2, list))
+
+  # after lambda declaration will be return data
+```
+- **Reducing list**
+Such as 1,2,3,4,5,6 => 21
+- **Import**
+`import {package_name}`
+- **Unpack argument of function**
+Single `*` multiple argument, Double `**` dictionary aka. keyword_arguments
+```
+  def x(*args):
+    print(args)
+  
+  # Turn argument to many function arguments
+  "Test {} {} {}".format(*[1,2,3]) # Test 1 2 3
+
+  def test(*args, **kwargs):
+    for k, arg in kwargs.items():
+      print(k, arg)
+```
