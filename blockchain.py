@@ -3,6 +3,7 @@ import hashlib as hl
 import json
 # global scope variable - can call by anywhere
 MINING_REWARD = 10
+DIFFICULTY = 2
 
 genesis_block = {
     'previous_hash': '',
@@ -21,7 +22,7 @@ def valid_proof(transactions, last_hash, proof):
     guess_hash = hl.sha256(guess).hexdigest()
     print('guess hash: {}'.format(guess_hash))
     # checking valid hash 00 - 00 is difficulty
-    return guess_hash[0:2] == '00'
+    return guess_hash[0:DIFFICULTY] == '0' * DIFFICULTY
 
 def proof_of_work():
     last_block = blockchain[-1]
