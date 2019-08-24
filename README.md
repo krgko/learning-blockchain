@@ -25,7 +25,7 @@ Command line approch contains with
     3. amount/data
 - **Blocks:** wrapper transaction(s) with header and append to chain - occur by mining (put transactions and pack as block)
 - **Blockchain:** multiple block that appended start from first block(genesis block) like chain (data structure like link-list)
-- **Hash:** use for reference block like an id. it stored on header of block(previous hase, current hash)
+- **Hash:** use for reference block like an id. it stored on header of block(previous hase, current hash) - **Why hash needed in blockchain**: if need to verify using previous transaction as chain there are many transactions and it very long so hashing can help to represent data to strings for using in verify step 
 - **Nonce (Number Used Once):** use for prevent replay request for PoW it used to check validity for miner who won puzzle solving as well
 - **Merkle Tree (data structure)** - use to check correctly of transaction in block and make sure that does not modified (a.k.a checksum) - some blockchain generate hash from merkle root
 - **Data structure** - maybe key-store, ...
@@ -33,6 +33,22 @@ Command line approch contains with
 - **Maniplate the chain** the blockchain does not allow to modify some data on the chain and the chain will invalid
 - **Blockchain verification** It use hash that calculate each block this will ensure that chain cannot manipulated
 - **To verify block hashes** Can check by try to create another set of hash as current_hash and reconcile with previous_hash
+
+## Proof of work
+Mining is challenging -> for security and control amount of coins
+- Find a number which fullfill PoW requirement (Answer of puzzle)
+- Take block data into account -> **If number is correct will added to block metadata then commit with transaction and previous hash**
+- Other node can verify PoW easily
+
+**Process**
+- Transactions - difference from Nonce
+- Previous hash
+- Proof (Nonce: Number used once) - increment in loop 0, ... n
+Checking PoW by hash all above into a hash e.g `00[a-f0-9]{62}` 00 is difficulty - miner need to find a correct hash
+
+**Cheating**
+Add old block -> check hash will failed to matched with previous hash
+Nonce changed -> that is a part of hash all of hashes after cheated block will change and PoW takes time so, all the block will be recalculated (These step will occur with block has been validated)
 
 ## Important note
 
@@ -319,3 +335,8 @@ Single `*` multiple argument, Double `**` dictionary aka. keyword_arguments
     for k, arg in kwargs.items():
       print(k, arg)
 ```
+- **Importing**
+Use keyword `import <package_name>` can call with `<package_name>.method`
+Or using alias `import <package_name> as <name>` call by `<name>.method`
+Or import only selected feature like `from <package> import <feature_name>`
+`from <package_name> import *` but not recomended because it might override some feature that imported 

@@ -1,20 +1,40 @@
-import functools
+from functools import reduce
+import hashlib as hl
+import json
 # global scope variable - can call by anywhere
 MINING_REWARD = 10
 
 genesis_block = {
     'previous_hash': '',
     'index': 0,
-    'transactions': []
+    'transactions': [],
+    'proof': 99 # any number, will not use this for calculate hash
 }
 blockchain = [genesis_block]
 open_transactions = []
 owner = 'Golf'  # person who send coin to others
 participants = {'Golf'}
 
+def valid_proof(transactions, last_hash, proof):
+    # make puzzle question
+    guess = (str(transactions) + str(last_hash) + str(proof)).encode()
+    guess_hash = hl.sha256(guess).hexdigest()
+    print('guess hash: {}'.format(guess_hash))
+    # checking valid hash 00 - 00 is difficulty
+    return guess_hash[0:2] == '00'
+
+def proof_of_work():
+    last_block = blockchain[-1]
+    last_hash = hash_block(last_block)
+    # nonce will step per 1
+    proof = 0
+    while not valid_proof(open_transactions, last_hash, proof):
+        proof += 1
+    return proof
 
 def hash_block(block):
-    return ''.join([str(block[key]) for key in block])
+    # like json stringify as digest because it will return as byte at initial
+    return hl.sha256(json.dumps(block).encode()).hexdigest()
 
 
 def get_balance(participant):
@@ -23,14 +43,16 @@ def get_balance(participant):
     open_tx_sender = [tx['amount']
                       for tx in open_transactions if tx['sender'] == participant]
     tx_sender.append(open_tx_sender)
-    amount_sent = functools.reduce(lambda tx_sum, tx_amt: tx_sum + sum(tx_amt) if len(tx_amt) > 0 else tx_sum + 0, tx_sender, 0)
+    amount_sent = reduce(
+        lambda tx_sum, tx_amt: tx_sum + sum(tx_amt) if len(tx_amt) > 0 else tx_sum + 0, tx_sender, 0)
     # amount_sent = 0
     # for tx in tx_sender:
     #     if len(tx) > 0:
     #         amount_sent += tx[0]
     tx_recipient = [[tx['amount'] for tx in block['transactions']
                      if tx['recipient'] == participant] for block in blockchain]
-    amount_received = functools.reduce(lambda tx_sum, tx_amt: tx_sum + sum(tx_amt) if len(tx_amt) > 0 else tx_sum + 0, tx_recipient, 0)
+    amount_received = reduce(lambda tx_sum, tx_amt: tx_sum + sum(
+        tx_amt) if len(tx_amt) > 0 else tx_sum + 0, tx_recipient, 0)
     # amount_received = 0
     # for tx in tx_recipient:
     #     if len(tx) > 0:
@@ -89,6 +111,7 @@ def add_transaction(recipient, amount=1.0, sender=owner):
 def mine_block():
     last_block = blockchain[-1]
     hashed_block = hash_block(last_block)
+    proof = proof_of_work()
     reward_transaction = {
         'sender': 'MINING',
         'recipient': owner,
@@ -101,7 +124,8 @@ def mine_block():
     block = {
         'previous_hash': hashed_block,
         'index': len(blockchain),
-        'transactions': copied_transactions
+        'transactions': copied_transactions,
+        'proof': proof
     }
     blockchain.append(block)
     return True
@@ -150,6 +174,9 @@ def verify_chain():
         if index == 0:
             continue  # genesis block hash no one maniplate
         if block['previous_hash'] != hash_block(blockchain[index - 1]):
+            return False
+        # check valid_proof before add reward
+        if not valid_proof(block['transactions'][:-1], block['previous_hash'], block['proof']):
             return False
     return True
 
