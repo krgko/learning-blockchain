@@ -9,20 +9,25 @@ genesis_block = {
     'previous_hash': '',
     'index': 0,
     'transactions': [],
-    'proof': 99 # any number, will not use this for calculate hash
+    'proof': 99  # any number, will not use this for calculate hash
 }
 blockchain = [genesis_block]
 open_transactions = []
 owner = 'Golf'  # person who send coin to others
 participants = {'Golf'}
 
+
 def valid_proof(transactions, last_hash, proof):
     # make puzzle question
     guess = (str(transactions) + str(last_hash) + str(proof)).encode()
     guess_hash = hl.sha256(guess).hexdigest()
-    print('guess hash: {}'.format(guess_hash))
+    print(guess_hash)
+    # why guess_hash will not change when do other things except mine
+    # because guess hash calculated will be the same when transaction not added
+
     # checking valid hash 00 - 00 is difficulty
     return guess_hash[0:DIFFICULTY] == '0' * DIFFICULTY
+
 
 def proof_of_work():
     last_block = blockchain[-1]
@@ -32,6 +37,7 @@ def proof_of_work():
     while not valid_proof(open_transactions, last_hash, proof):
         proof += 1
     return proof
+
 
 def hash_block(block):
     # like json stringify as digest because it will return as byte at initial
@@ -112,6 +118,7 @@ def add_transaction(recipient, amount=1.0, sender=owner):
 def mine_block():
     last_block = blockchain[-1]
     hashed_block = hash_block(last_block)
+    # proof before add reward transaction
     proof = proof_of_work()
     reward_transaction = {
         'sender': 'MINING',
