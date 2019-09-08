@@ -1,4 +1,5 @@
 from functools import reduce
+from hashutil import hash_block, hs256
 import hashlib as hl
 import json
 
@@ -24,7 +25,7 @@ participants = {'Golf'}
 def valid_proof(transactions, last_hash, proof):
     # make puzzle question
     guess = (str(transactions) + str(last_hash) + str(proof)).encode()
-    guess_hash = hl.sha256(guess).hexdigest()
+    guess_hash = hs256(guess)
     print(guess_hash)
     # why guess_hash will not change when do other things except mine
     # because guess hash calculated will be the same when transaction not added
@@ -41,12 +42,6 @@ def proof_of_work():
     while not valid_proof(open_transactions, last_hash, proof):
         proof += 1
     return proof
-
-
-def hash_block(block):
-    # like json stringify as digest because it will return as byte at initial
-    # the order might changed and will make hashes invalid that is why we need to add sort
-    return hl.sha256(json.dumps(block, sort_keys=True).encode()).hexdigest()
 
 
 def get_balance(participant):
