@@ -1,6 +1,10 @@
 from functools import reduce
 import hashlib as hl
 import json
+
+# Ensure that order correct
+from collections import OrderedDict
+
 # global scope variable - can call by anywhere
 MINING_REWARD = 10
 DIFFICULTY = 2
@@ -41,7 +45,8 @@ def proof_of_work():
 
 def hash_block(block):
     # like json stringify as digest because it will return as byte at initial
-    return hl.sha256(json.dumps(block).encode()).hexdigest()
+    # the order might changed and will make hashes invalid that is why we need to add sort
+    return hl.sha256(json.dumps(block, sort_keys=True).encode()).hexdigest()
 
 
 def get_balance(participant):
@@ -102,11 +107,13 @@ def add_transaction(recipient, amount=1.0, sender=owner):
         :amount: The amount of coins (default=1.0)
     """
 
-    transaction = {
-        'sender': sender,
-        'recipient': recipient,
-        'amount': amount
-    }
+    # transaction = {
+    #     'sender': sender,
+    #     'recipient': recipient,
+    #     'amount': amount
+    # }
+    # to prevent order of dict changed
+    transaction = OrderedDict([('sender', sender), ('recipient', recipient), ('amount', amount)])
     if verify_transaction(transaction):
         open_transactions.append(transaction)
         participants.add(sender)
@@ -120,11 +127,12 @@ def mine_block():
     hashed_block = hash_block(last_block)
     # proof before add reward transaction
     proof = proof_of_work()
-    reward_transaction = {
-        'sender': 'MINING',
-        'recipient': owner,
-        'amount': MINING_REWARD
-    }
+    # reward_transaction = {
+    #     'sender': 'MINING',
+    #     'recipient': owner,
+    #     'amount': MINING_REWARD
+    # }
+    reward_transaction = OrderedDict([('sender', 'MINING'), ('recipient', owner), ('amount', MINING_REWARD)])
 
     # we don't modify master data so, we need to copy it
     copied_transactions = open_transactions[:]
