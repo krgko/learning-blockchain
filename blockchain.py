@@ -22,16 +22,63 @@ owner = 'Golf'  # person who send coin to others
 participants = {'Golf'}
 
 
+def load_data():
+    with open('blockchain.txt', 'r') as f:
+        file_content = f.readlines()
+        if len(file_content) != 0:
+            global blockchain  # Tell python that we have these global vars
+            global open_transactions
+            # Failed due to these 2 vars need list not string
+            # loads will retrieve json object from file
+
+            # OrderedDict will lost if load like this
+            blockchain = json.loads(file_content[0][:-1])
+            updated_blockchain = []
+            # Make data like before store
+            for block in blockchain:
+                updated_block = {
+                    'previous_hash': block['previous_hash'],
+                    'index': block['index'],
+                    'proof': block['proof'],
+                    'transactions': [OrderedDict(
+                                     [('sender', tx['sender']), ('recipient', tx['recipient']), ('amount', tx['amount'])]) for tx in block['transactions']]}
+                updated_blockchain.append(updated_block)
+            blockchain = updated_blockchain
+            open_transactions = json.loads(file_content[1])
+            updated_transactions = []
+            for tx in open_transactions:
+                updated_transaction = OrderedDict(
+                    [('sender', tx['sender']), ('recipient', tx['recipient']), ('amount', tx['amount'])])
+                updated_transactions.append(updated_transaction)
+            open_transactions = updated_transactions
+
+
+load_data()
+
+
+def save_data():
+    with open('blockchain.txt', 'w') as f:
+        # All blockchain means historical data
+        # Cannot use string because can store but cannot use
+        # f.write(str(blockchain))
+        # f.write('\n')
+        # f.write(str(open_transactions))
+        # dumps will convert object to string
+        f.write(json.dumps(blockchain))
+        f.write('\n')
+        f.write(json.dumps(open_transactions))
+
+
 def valid_proof(transactions, last_hash, proof):
     # make puzzle question
     guess = (str(transactions) + str(last_hash) + str(proof)).encode()
     guess_hash = hs256(guess)
-    print(guess_hash)
+    # print(guess_hash)
     # why guess_hash will not change when do other things except mine
     # because guess hash calculated will be the same when transaction not added
 
     # checking valid hash 00 - 00 is difficulty
-    return guess_hash[0:DIFFICULTY] == '0' * DIFFICULTY
+    return guess_hash[0: DIFFICULTY] == '0' * DIFFICULTY
 
 
 def proof_of_work():
@@ -108,11 +155,13 @@ def add_transaction(recipient, amount=1.0, sender=owner):
     #     'amount': amount
     # }
     # to prevent order of dict changed
-    transaction = OrderedDict([('sender', sender), ('recipient', recipient), ('amount', amount)])
+    transaction = OrderedDict(
+        [('sender', sender), ('recipient', recipient), ('amount', amount)])
     if verify_transaction(transaction):
         open_transactions.append(transaction)
         participants.add(sender)
         participants.add(recipient)
+        save_data()
         return True
     return False
 
@@ -127,7 +176,8 @@ def mine_block():
     #     'recipient': owner,
     #     'amount': MINING_REWARD
     # }
-    reward_transaction = OrderedDict([('sender', 'MINING'), ('recipient', owner), ('amount', MINING_REWARD)])
+    reward_transaction = OrderedDict(
+        [('sender', 'MINING'), ('recipient', owner), ('amount', MINING_REWARD)])
 
     # we don't modify master data so, we need to copy it
     copied_transactions = open_transactions[:]
@@ -215,6 +265,7 @@ while waiting_for_input:
     elif user_choice == '2':
         if mine_block():
             open_transactions = []
+            save_data()
     elif user_choice == '3':
         print_blocks()
     elif user_choice == '4':

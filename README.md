@@ -20,12 +20,12 @@ Command line approch contains with
 ## Blockchain
 
 - **Transactions:** in this case it will store data like coin
-    1. sender
-    2. recipient
-    3. amount/data
+  1. sender
+  2. recipient
+  3. amount/data
 - **Blocks:** wrapper transaction(s) with header and append to chain - occur by mining (put transactions and pack as block)
 - **Blockchain:** multiple block that appended start from first block(genesis block) like chain (data structure like link-list)
-- **Hash:** use for reference block like an id. it stored on header of block(previous hase, current hash) - **Why hash needed in blockchain**: if need to verify using previous transaction as chain there are many transactions and it very long so hashing can help to represent data to strings for using in verify step 
+- **Hash:** use for reference block like an id. it stored on header of block(previous hase, current hash) - **Why hash needed in blockchain**: if need to verify using previous transaction as chain there are many transactions and it very long so hashing can help to represent data to strings for using in verify step
 - **Nonce (Number Used Once):** use for prevent replay request for PoW it used to check validity for miner who won puzzle solving as well
 - **Merkle Tree (data structure)** - use to check correctly of transaction in block and make sure that does not modified (a.k.a checksum) - some blockchain generate hash from merkle root
 - **Data structure** - maybe key-store, ...
@@ -35,16 +35,19 @@ Command line approch contains with
 - **To verify block hashes** Can check by try to create another set of hash as current_hash and reconcile with previous_hash
 
 ## Proof of work
+
 Mining is challenging -> for security and control amount of coins
+
 - Find a number which fullfill PoW requirement (Answer of puzzle)
 - Take block data into account -> **If number is correct will added to block metadata then commit with transaction and previous hash**
 - Other node can verify PoW easily
 
 **Process**
+
 - Transactions - difference from Nonce
 - Previous hash
 - Proof (Nonce: Number used once) - increment in loop 0, ... n
-Checking PoW by hash all above into a hash e.g `00[a-f0-9]{62}` 00 is difficulty - miner need to find a correct hash
+  Checking PoW by hash all above into a hash e.g `00[a-f0-9]{62}` 00 is difficulty - miner need to find a correct hash
 
 **Cheating**
 Add old block -> check hash will failed to matched with previous hash
@@ -161,15 +164,17 @@ Nonce changed -> that is a part of hash all of hashes after cheated block will c
   ```
     (condition_1 {logic} condition_2) {logic} condition_3
   ```
-- **switch case:** *there is no switch case on python use if-else instead*
+- **switch case:** _there is no switch case on python use if-else instead_
 - **is & in:** is - check are they really the same object, in - check is element in that data object or not
+
   ```
     test = [1, 2, 3]
     test2 = [1, 2, 3]
-    
+
     test is test2 # False
     1 in test # True
   ```
+
 - **For loop with else** else can added after loop so, it will do inside else after loop has been broken
   ```
     for {condition}:
@@ -177,7 +182,8 @@ Nonce changed -> that is a part of hash all of hashes after cheated block will c
     else:
       # do something
   ```
-- **Range** because there is no `for(i = 0; i < 10; i++)` in python range *accept only integer*
+- **Range** because there is no `for(i = 0; i < 10; i++)` in python range _accept only integer_
+
   ```
     for element in range({number}):
       # do stuff
@@ -185,8 +191,10 @@ Nonce changed -> that is a part of hash all of hashes after cheated block will c
     for element in range({start}, {stop}, {step}):
       # do stuff
   ```
-- **While** loop as long as condition is *True*
+
+- **While** loop as long as condition is _True_
 - **List and String**
+
   ```
     list = ['h', 'e']
     text = 'he'
@@ -194,12 +202,15 @@ Nonce changed -> that is a part of hash all of hashes after cheated block will c
     # can use with
     for c in {list|string}:
       print(c)
-    
+
     # helper to know method able to use with
-    help({variable}) 
+    help({variable})
   ```
-string does not support index assignment but list can
+
+  string does not support index assignment but list can
+
 - **Format** control the looks of print
+
   ```
     print('string: ' + {string} + 'int: ' + {int})
 
@@ -221,14 +232,18 @@ string does not support index assignment but list can
     > means step space
     # [][][]1.23000
   ```
-ref: https://pyformat.info/
-*For python 3.6+*
+
+  ref: https://pyformat.info/
+  _For python 3.6+_
+
   ```
     f'string: {a} int: {b}'
   ```
+
 - **Escape String** can be use "'" double quote or '\'' backslash
-ref: https://docs.python.org/2.0/ref/strings.html
+  ref: https://docs.python.org/2.0/ref/strings.html
 - **List** Mutable, one type `['x', 'y']`
+
   ```
     # iteration example
     for element in list:
@@ -238,6 +253,7 @@ ref: https://docs.python.org/2.0/ref/strings.html
 
     new_list = [el for el in list if el % 2 == 0] # added if
   ```
+
 - **Set** Immutable, unorderered, no duplicate, one type `{'x', 'y'}`
   ```
     test_set = set('xyz') # {'x', 'y', 'z'}
@@ -256,6 +272,7 @@ ref: https://docs.python.org/2.0/ref/strings.html
       ... do stuff
   ```
 - **Copiled other complex type** `the basic type` can coplied because it reference by value but `the complex type` reference by address (pass by reference) like pointer
+
 ```
   list = [A, B, C]
   copied = list
@@ -275,13 +292,16 @@ ref: https://docs.python.org/2.0/ref/strings.html
   # note: it works with tuple as well (tuple = (1,2,3,4))
   # sets (sets = {1,2,3,4}) does not work
 ```
+
 - **Shallow vs deep copies** `list[:]` this is shallow copy bacause for the complex list like array of dictionary will not full copied
-Note: the inner data structures cannot copied
+  Note: the inner data structures cannot copied
 - **is and ==** `==` will check only value but `is` will check in address level if the same that means it is the same object
-**Note:** Trying by using data like list
+  **Note:** Trying by using data like list
 
 **Additional:** https://docs.python.org/3/tutorial/datastructures.html#dictionaries
+
 - **All and Any** By example or think it like `AND, OR`
+
 ```
   any([True, False, False]) # return True
   all([True, False, False]) # return False
@@ -290,20 +310,23 @@ Note: the inner data structures cannot copied
   list = [-1, 2, 3, 4]
   all([n > 0 for n in list])
 ```
+
 - **Comparison between data structures**
 
-|  type/test |           list-comprehension ex. [e for e in set]           | iteration | indexing |      unpacking ex. a,b = list      |
-|:----------:|:-----------------------------------------------------------:|:---------:|:--------:|:----------------------------------:|
-|    list    |                              Y                              |     Y     |     Y    | Y (if unpack all element in there) |
-|     set    |                              Y                              |     Y     |     N    | Y (if unpack all element in there) |
-|    tuple   |                              Y                              |     Y     |     Y    | Y (if unpack all element in there) |
-| dictionary | Y (with items and while iterate need to use (index, value)) |     Y     |     Y    |        Y (return only keys)        |
+| type/test  |           list-comprehension ex. [e for e in set]           | iteration | indexing |      unpacking ex. a,b = list      |
+| :--------: | :---------------------------------------------------------: | :-------: | :------: | :--------------------------------: |
+|    list    |                              Y                              |     Y     |    Y     | Y (if unpack all element in there) |
+|    set     |                              Y                              |     Y     |    N     | Y (if unpack all element in there) |
+|   tuple    |                              Y                              |     Y     |    Y     | Y (if unpack all element in there) |
+| dictionary | Y (with items and while iterate need to use (index, value)) |     Y     |    Y     |        Y (return only keys)        |
+
 - **List comprehension**
-Use `map()` to iterate list with do something with it by function
+  Use `map()` to iterate list with do something with it by function
+
 ```
   map({function}, {variable})
 
-  def mul(e): 
+  def mul(e):
     return e*2
 
   list = [1,2,3]
@@ -311,23 +334,27 @@ Use `map()` to iterate list with do something with it by function
 
   # if does not use list casting it will return obj address
 ```
+
 - **Lambda function**
-For above lecture section
+  For above lecture section
+
 ```
   list(map(lamda el: el * 2, list))
 
   # after lambda declaration will be return data
 ```
+
 - **Reducing list**
-Such as 1,2,3,4,5,6 => 21
+  Such as 1,2,3,4,5,6 => 21
 - **Import**
-`import {package_name}`
+  `import {package_name}`
 - **Unpack argument of function**
-Single `*` multiple argument, Double `**` dictionary aka. keyword_arguments
+  Single `*` multiple argument, Double `**` dictionary aka. keyword_arguments
+
 ```
   def x(*args):
     print(args)
-  
+
   # Turn argument to many function arguments
   "Test {} {} {}".format(*[1,2,3]) # Test 1 2 3
 
@@ -335,8 +362,69 @@ Single `*` multiple argument, Double `**` dictionary aka. keyword_arguments
     for k, arg in kwargs.items():
       print(k, arg)
 ```
+
 - **Importing**
-Use keyword `import <package_name>` can call with `<package_name>.method`
-Or using alias `import <package_name> as <name>` call by `<name>.method`
-Or import only selected feature like `from <package> import <feature_name>`
-`from <package_name> import *` but not recomended because it might override some feature that imported 
+  Use keyword `import <package_name>` can call with `<package_name>.method`
+  Or using alias `import <package_name> as <name>` call by `<name>.method`
+  Or import only selected feature like `from <package> import <feature_name>`
+  `from <package_name> import *` but not recomended because it might override some feature that imported -**Handling File Access**
+
+```python
+# Life cycle
+open(name, mode) # r: read, w: write, r+: read & write, x: write failed if file exist, a: append, b: binary mode
+
+# f = open('demo.txt', mode='r')
+# f.write('Hello from Python!\n')
+# f.close() # Program will finished file written but does not finished
+
+# f.write('Hello from Python!\n')
+# f.write('Hello from Python!\n')
+# f.write('Hello from Python!\n')
+# f.write('Hello from Python!\n')
+# f.close()
+
+# From this line program will not create demo.txt with content
+# Due to program does not finished yet
+# user_input = input('Please enter input: ')
+
+
+# Wrong mode make error
+# Wrong mode can erase file content: w while read file
+# file_content = f.read()
+# f.close()
+# print('file content is: {}'.format(file_content))
+
+# file_content = f.readlines()
+# f.close()
+# Return as list
+# print('file content is: {}'.format(file_content))
+
+# for line in file_content:
+#     # Remove special charactor
+#     print(line[:-1])
+
+# Like
+# line = f.readline()
+# print(line[:-1])
+# print(line[:-1])
+# print(line[:-1])
+# print(line[:-1])
+# print(line[:-1])
+# line = f.readline()
+# while line:
+#     print(line)
+#     line = f.readline()
+# f.close()
+
+# with statement for blocking code
+with open('demo.txt', mode='w') as f:
+    # line = f.readline()
+    # while line:
+    #     print(line)
+    #     line = f.readline()
+    # f.close()
+    f.write('Test blocking')
+    # Blocking will close file automatically
+user_input = input('Testing:')
+print('done!')
+```
