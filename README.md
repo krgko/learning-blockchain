@@ -367,7 +367,9 @@ Nonce changed -> that is a part of hash all of hashes after cheated block will c
   Use keyword `import <package_name>` can call with `<package_name>.method`
   Or using alias `import <package_name> as <name>` call by `<name>.method`
   Or import only selected feature like `from <package> import <feature_name>`
-  `from <package_name> import *` but not recomended because it might override some feature that imported -**Handling File Access**
+  `from <package_name> import *` but not recomended because it might override some feature that imported
+
+-**Handling File Access**
 
 ```python
 # Life cycle
@@ -428,3 +430,9 @@ with open('demo.txt', mode='w') as f:
 user_input = input('Testing:')
 print('done!')
 ```
+
+- **Instead of JSON change to Binary** use pickle and other method like json
+
+- **Pickle vs JSON**
+  Pickle works for all python type, binary format
+  JSON works only json, convert data to text

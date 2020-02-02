@@ -2,6 +2,7 @@ from functools import reduce
 from hashutil import hash_block, hs256
 import hashlib as hl
 import json
+import pickle
 
 # Ensure that order correct
 from collections import OrderedDict
@@ -23,34 +24,44 @@ participants = {'Golf'}
 
 
 def load_data():
-    with open('blockchain.txt', 'r') as f:
-        file_content = f.readlines()
-        if len(file_content) != 0:
-            global blockchain  # Tell python that we have these global vars
-            global open_transactions
-            # Failed due to these 2 vars need list not string
-            # loads will retrieve json object from file
+    try:
+        with open('blockchain.txt', 'r') as f:
+            # with open('blockchain.b', 'rb') as f:
+            file_content = f.readlines()
+            # file_content_b = f.read()
+            # if len(file_content_b) != 0:
+            # file_content = pickle.loads(file_content_b)
+            if len(file_content) != 0:
+                global blockchain  # Tell python that we have these global vars
+                global open_transactions
+                # Failed due to these 2 vars need list not string
+                # loads will retrieve json object from file
 
-            # OrderedDict will lost if load like this
-            blockchain = json.loads(file_content[0][:-1])
-            updated_blockchain = []
-            # Make data like before store
-            for block in blockchain:
-                updated_block = {
-                    'previous_hash': block['previous_hash'],
-                    'index': block['index'],
-                    'proof': block['proof'],
-                    'transactions': [OrderedDict(
-                                     [('sender', tx['sender']), ('recipient', tx['recipient']), ('amount', tx['amount'])]) for tx in block['transactions']]}
-                updated_blockchain.append(updated_block)
-            blockchain = updated_blockchain
-            open_transactions = json.loads(file_content[1])
-            updated_transactions = []
-            for tx in open_transactions:
-                updated_transaction = OrderedDict(
-                    [('sender', tx['sender']), ('recipient', tx['recipient']), ('amount', tx['amount'])])
-                updated_transactions.append(updated_transaction)
-            open_transactions = updated_transactions
+                # OrderedDict will lost if load like this
+                blockchain = json.loads(file_content[0][:-1])
+                updated_blockchain = []
+                # Make data like before store
+                for block in blockchain:
+                    updated_block = {
+                        'previous_hash': block['previous_hash'],
+                        'index': block['index'],
+                        'proof': block['proof'],
+                        'transactions': [OrderedDict(
+                                        [('sender', tx['sender']), ('recipient', tx['recipient']), ('amount', tx['amount'])]) for tx in block['transactions']]}
+                    updated_blockchain.append(updated_block)
+                blockchain = updated_blockchain
+                open_transactions = json.loads(file_content[1])
+                updated_transactions = []
+                for tx in open_transactions:
+                    updated_transaction = OrderedDict(
+                        [('sender', tx['sender']), ('recipient', tx['recipient']), ('amount', tx['amount'])])
+                    updated_transactions.append(updated_transaction)
+                open_transactions = updated_transactions
+                # blockchain = file_content['chain']
+                # open_transactions = file_content['ot']
+    except:
+        print("An exception occured. Please create blockchain.b ot blockchain.txt")
+        exit(1)
 
 
 load_data()
@@ -58,6 +69,7 @@ load_data()
 
 def save_data():
     with open('blockchain.txt', 'w') as f:
+        # with open('blockchain.b', 'wb') as f:
         # All blockchain means historical data
         # Cannot use string because can store but cannot use
         # f.write(str(blockchain))
@@ -67,6 +79,12 @@ def save_data():
         f.write(json.dumps(blockchain))
         f.write('\n')
         f.write(json.dumps(open_transactions))
+        # Binary data using pickle - cannot do like before because we will not store text
+        # save_data = {
+        #     'chain': blockchain,
+        #     'ot': open_transactions
+        # }
+        # f.write(pickle.dumps(save_data))
 
 
 def valid_proof(transactions, last_hash, proof):
