@@ -436,3 +436,23 @@ print('done!')
 - **Pickle vs JSON**
   Pickle works for all python type, binary format
   JSON works only json, convert data to text
+
+- **Debugger**
+  in vscode we need to create JSON on launch.json. You can review the variable by run debugger
+
+- **Try-except** python is a code block so it can catch an error block by block
+  
+  ```python
+    try:
+      # line of code
+    except (TYPE1, TYPE2):
+      # handling
+    except TYPE1:
+      # handling
+    except: # All error catch should be not great idea
+      # other error does not match type will comes here
+    finally:
+      # even though error or not will come here
+  ```
+
+  **Which one should handle?** Only unpredictable should handle such IOError, OSError

@@ -19,11 +19,15 @@ genesis_block = {
 }
 blockchain = [genesis_block]
 open_transactions = []
+
 owner = 'Golf'  # person who send coin to others
 participants = {'Golf'}
 
 
 def load_data():
+    global blockchain  # Tell python that we have these global vars
+    global open_transactions
+
     try:
         with open('blockchain.txt', 'r') as f:
             # with open('blockchain.b', 'rb') as f:
@@ -32,8 +36,7 @@ def load_data():
             # if len(file_content_b) != 0:
             # file_content = pickle.loads(file_content_b)
             if len(file_content) != 0:
-                global blockchain  # Tell python that we have these global vars
-                global open_transactions
+
                 # Failed due to these 2 vars need list not string
                 # loads will retrieve json object from file
 
@@ -59,32 +62,45 @@ def load_data():
                 open_transactions = updated_transactions
                 # blockchain = file_content['chain']
                 # open_transactions = file_content['ot']
-    except:
-        print("An exception occured. Please create blockchain.b ot blockchain.txt")
-        exit(1)
+    except (IOError, IndexError):
+        # IndexError will handle if blockchain.txt empty
+        # When IOError it still support to create block
+        genesis_block = {
+            'previous_hash': '',
+            'index': 0,
+            'transactions': [],
+            'proof': 99  # any number, will not use this for calculate hash
+        }
+        blockchain = [genesis_block]
+        open_transactions = []
+    finally:
+        print('Start program succeed !!')
 
 
 load_data()
 
 
 def save_data():
-    with open('blockchain.txt', 'w') as f:
-        # with open('blockchain.b', 'wb') as f:
-        # All blockchain means historical data
-        # Cannot use string because can store but cannot use
-        # f.write(str(blockchain))
-        # f.write('\n')
-        # f.write(str(open_transactions))
-        # dumps will convert object to string
-        f.write(json.dumps(blockchain))
-        f.write('\n')
-        f.write(json.dumps(open_transactions))
-        # Binary data using pickle - cannot do like before because we will not store text
-        # save_data = {
-        #     'chain': blockchain,
-        #     'ot': open_transactions
-        # }
-        # f.write(pickle.dumps(save_data))
+    try:
+        with open('blockchain.txt', 'w') as f:
+            # with open('blockchain.b', 'wb') as f:
+            # All blockchain means historical data
+            # Cannot use string because can store but cannot use
+            # f.write(str(blockchain))
+            # f.write('\n')
+            # f.write(str(open_transactions))
+            # dumps will convert object to string
+            f.write(json.dumps(blockchain))
+            f.write('\n')
+            f.write(json.dumps(open_transactions))
+            # Binary data using pickle - cannot do like before because we will not store text
+            # save_data = {
+            #     'chain': blockchain,
+            #     'ot': open_transactions
+            # }
+            # f.write(pickle.dumps(save_data))
+    except IOError:
+        print('Saving chain failed')
 
 
 def valid_proof(transactions, last_hash, proof):
