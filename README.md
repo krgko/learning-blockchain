@@ -441,7 +441,7 @@ print('done!')
   in vscode we need to create JSON on launch.json. You can review the variable by run debugger
 
 - **Try-except** python is a code block so it can catch an error block by block
-  
+
   ```python
     try:
       # line of code
@@ -456,3 +456,163 @@ print('done!')
   ```
 
   **Which one should handle?** Only unpredictable should handle such IOError, OSError
+
+- **OOP** Treat procedural as class and object with using method
+
+  - Class is like a blueprint
+  - Object created by class we can call it is instance
+
+  Example OOP
+
+  ```python
+    class Car:
+    # Class attributes
+    # top_speed = 100
+    # warnings = []
+
+    # constructor
+    def __init__(self, s_top_speed=100):
+        super().__init__()
+        # attribute of instance
+        # public
+        self.top_speed = s_top_speed
+        # private
+        self.__warnings = []
+
+    def __repr__(self):
+        print('Printing...')
+        return 'Top speed: {}, Warnings: {}'.format(self.top_speed, len(self.__warnings))
+
+    def add_warning(self, warning_text):
+        self.__warnings.append(warning_text)
+
+    def get_warning(self):
+        return self.__warnings
+
+    # Self represent instance of the class
+    def drive(self):
+        print('Broonnnnnnnnnnnnnnnn {} kph'.format(self.top_speed))
+
+    car1 = Car()
+    car1.drive()
+    # car1.warnings.append('Warnings')
+    car1.add_warning('Warnings')
+    # print(car1.__warnings) # Cannot called from outside
+    # print(car1.__dict__)  # Print attribute as dictionary
+    # print(car1.top_speed.__str__())  # String output
+    # print(car1.__repr__())  # General output
+    print(car1)  # General output like above
+    print(car1.get_warning())
+
+    print('#########')
+    # Directly attach the class, Should not do
+    # Need to make it effect only an instance
+    # Car.top_speed = 200
+    # car1.warnings.append('Warnings')
+
+    car2 = Car(200)
+    car2.drive()
+    # print(car2.__warnings)
+    # print(car2.__dict__)  # Print attribute as dictionary
+    print(car2.get_warning())
+
+  ```
+
+  **VS Dict** Can hold data as object, not based on blueprint
+  **Why need OOP** Structured and created quickly, Also include method not just a field and allow to write clean code
+
+  OOP example with inheritance
+
+  ```python
+  ############### Vehicle.py
+
+  class Vehicle:
+    # Class attributes
+    # top_speed = 100
+    # warnings = []
+
+    # constructor
+    def __init__(self, s_top_speed=100):
+        super().__init__()
+        # attribute of instance
+        # public
+        self.top_speed = s_top_speed
+        # private
+        self.__warnings = []
+
+    def __repr__(self):
+        print('Printing...')
+        return 'Top speed: {}, Warnings: {}'.format(self.top_speed, len(self.__warnings))
+
+    def add_warning(self, warning_text):
+        self.__warnings.append(warning_text)
+
+    def get_warning(self):
+        return self.__warnings
+
+    # Self represent instance of the class
+    def drive(self):
+        print('Broonnnnnnnnnnnnnnnn {} kph'.format(self.top_speed))
+
+  ############### Car.py
+
+  from vehicle import Vehicle
+
+
+  class Car(Vehicle):
+      def __init__(self, s_top_speed=100):
+          # Access to the base class
+          super().__init__(s_top_speed)
+
+      def print_looks(self):
+          print('Looks what the nice car is..')
+
+
+  car1 = Car()
+  car1.drive()
+  # car1.warnings.append('Warnings')
+  car1.add_warning('Warnings')
+  # print(car1.__warnings) # Cannot called from outside
+  # print(car1.__dict__)  # Print attribute as dictionary
+  # print(car1.top_speed.__str__())  # String output
+  # print(car1.__repr__())  # General output
+  print(car1)  # General output like above
+  print(car1.get_warning())
+
+  print('#########')
+  # Directly attach the class, Should not do
+  # Need to make it effect only an instance
+  # Car.top_speed = 200
+  # car1.warnings.append('Warnings')
+
+  car2 = Car(200)
+  car2.drive()
+  # print(car2.__warnings)
+  # print(car2.__dict__)  # Print attribute as dictionary
+  print(car2.get_warning())
+
+  ############### Bus.py
+
+  from vehicle import Vehicle
+
+  class Bus(Vehicle):
+      def __init__(self, s_top_speed=100):
+          super().__init__(s_top_speed)
+
+          # attribute of instance
+          # public
+          self.top_speed = s_top_speed
+          # private
+          self.__warnings = []
+          self.passengers = []
+
+      def add_group(self, passenger):
+          self.passengers.append(passenger)
+
+
+  bus1 = Bus(80)
+  bus1.add_group(['A', 'B', 'C'])
+  print(bus1.passengers)
+
+
+  ```
