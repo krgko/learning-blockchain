@@ -13,215 +13,226 @@ from verification import Verification
 # Ensure that order correct
 from collections import OrderedDict
 
-# global scope variable - can call by anywhere
 MINING_REWARD = 10
 
-# genesis_block = {
-#     'previous_hash': '',
-#     'index': 0,
-#     'transactions': [],
-#     'proof': 99  # any number, will not use this for calculate hash
-# }
-genesis_block = Block(0, '', [], 0)
-blockchain = [genesis_block]
-open_transactions = []
 
-owner = 'Golf'  # person who send coin to others
-participants = {'Golf'}
+class Blockchain:
+    def __init__(self, node_id):
+        self.genesis_block = Block(0, '', [], 0)
+        # Initialized blockchain list
+        self.chain = [self.genesis_block]
+        self.open_transactions = []
+        self.load_data()
+        self.node_id = node_id
 
+    # # global scope variable - can call by anywhere
+    # MINING_REWARD = 10
 
-def load_data():
-    global blockchain  # Tell python that we have these global vars
-    global open_transactions
+    # # genesis_block = {
+    # #     'previous_hash': '',
+    # #     'index': 0,
+    # #     'transactions': [],
+    # #     'proof': 99  # any number, will not use this for calculate hash
+    # # }
+    # genesis_block = Block(0, '', [], 0)
+    # blockchain = [genesis_block]
+    # open_transactions = []
 
-    try:
-        with open('blockchain.txt', 'r') as f:
-            # with open('blockchain.b', 'rb') as f:
-            file_content = f.readlines()
-            # file_content_b = f.read()
-            # if len(file_content_b) != 0:
-            # file_content = pickle.loads(file_content_b)
-            if len(file_content) != 0:
+    # owner = 'Golf'  # person who send coin to others
+    # participants = {'Golf'}
 
-                # Failed due to these 2 vars need list not string
-                # loads will retrieve json object from file
+    def load_data(self):
+        # global blockchain  # Tell python that we have these global vars
+        # global open_transactions
 
-                # OrderedDict will lost if load like this
-                blockchain = json.loads(file_content[0][:-1])
-                updated_blockchain = []
-                # Make data like before store
-                for block in blockchain:
-                    converted_txs = [Transaction(
-                        tx['sender'], tx['recipient'], tx['amount']) for tx in block['transactions']]
-                    updated_block = Block(
-                        block['index'], block['previous_hash'], converted_txs, block['proof'], block['timestamp'])
-                    updated_blockchain.append(updated_block)
-                blockchain = updated_blockchain
-                open_transactions = json.loads(file_content[1])
-                updated_transactions = []
-                for tx in open_transactions:
-                    updated_transaction = Transaction(
-                        tx['sender'], tx['recipient'], tx['amount'])
-                    updated_transactions.append(updated_transaction)
-                open_transactions = updated_transactions
-                # blockchain = file_content['chain']
-                # open_transactions = file_content['ot']
-    except (IOError, IndexError):
-        # IndexError will handle if blockchain.txt empty
-        # When IOError it still support to create block
-        genesis_block = Block(0, '', [], 0)
-        blockchain = [genesis_block]
-        open_transactions = []
-    finally:
-        print('Start program succeed !!')
+        try:
+            with open('blockchain.txt', 'r') as f:
+                # with open('blockchain.b', 'rb') as f:
+                file_content = f.readlines()
+                # file_content_b = f.read()
+                # if len(file_content_b) != 0:
+                # file_content = pickle.loads(file_content_b)
+                if len(file_content) != 0:
 
+                    # Failed due to these 2 vars need list not string
+                    # loads will retrieve json object from file
 
-load_data()
+                    # OrderedDict will lost if load like this
+                    blockchain = json.loads(file_content[0][:-1])
+                    updated_blockchain = []
+                    # Make data like before store
+                    for block in blockchain:
+                        converted_txs = [Transaction(
+                            tx['sender'], tx['recipient'], tx['amount']) for tx in block['transactions']]
+                        updated_block = Block(
+                            block['index'], block['previous_hash'], converted_txs, block['proof'], block['timestamp'])
+                        updated_blockchain.append(updated_block)
+                    self.chain = updated_blockchain
+                    open_transactions = json.loads(file_content[1])
+                    updated_transactions = []
+                    for tx in open_transactions:
+                        updated_transaction = Transaction(
+                            tx['sender'], tx['recipient'], tx['amount'])
+                        updated_transactions.append(updated_transaction)
+                    self.open_transactions = updated_transactions
+                    # blockchain = file_content['chain']
+                    # open_transactions = file_content['ot']
+        except (IOError, IndexError):
+            # IndexError will handle if blockchain.txt empty
+            # When IOError it still support to create block
+            # These things will be initialized on constructor automatically
+            # genesis_block = Block(0, '', [], 0)
+            # blockchain = [genesis_block]
+            # open_transactions = []
+            pass
+        finally:
+            print('Start program succeed !!')
 
+    # When changed to the class it will not declared here
+    # load_data()
 
-def save_data():
-    try:
-        with open('blockchain.txt', 'w') as f:
-            # Convert object to dict for saving
-            saveable_block = [block.__dict__ for block in [
-                Block(b.index, b.previous_hash, [tx.__dict__ for tx in b.transactions], b.proof, b.timestamp) for b in blockchain]]
-            # Can be do like this or apply every transaction
-            saveable_transactions = [tx.__dict__ for tx in open_transactions]
+    def save_data(self):
+        try:
+            with open('blockchain.txt', 'w') as f:
+                # Convert object to dict for saving
+                saveable_block = [block.__dict__ for block in [
+                    Block(b.index, b.previous_hash, [tx.__dict__ for tx in b.transactions], b.proof, b.timestamp) for b in self.chain]]
+                # Can be do like this or apply every transaction
+                saveable_transactions = [
+                    tx.__dict__ for tx in self.open_transactions]
 
-            # with open('blockchain.b', 'wb') as f:
-            # All blockchain means historical data
-            # Cannot use string because can store but cannot use
-            # f.write(str(blockchain))
-            # f.write('\n')
-            # f.write(str(open_transactions))
-            # dumps will convert object to string
-            f.write(json.dumps(saveable_block))
-            f.write('\n')
-            f.write(json.dumps(saveable_transactions))
-            # Binary data using pickle - cannot do like before because we will not store text
-            # save_data = {
-            #     'chain': blockchain,
-            #     'ot': open_transactions
-            # }
-            # f.write(pickle.dumps(save_data))
-    except IOError:
-        print('Saving chain failed')
+                # with open('blockchain.b', 'wb') as f:
+                # All blockchain means historical data
+                # Cannot use string because can store but cannot use
+                # f.write(str(blockchain))
+                # f.write('\n')
+                # f.write(str(open_transactions))
+                # dumps will convert object to string
+                f.write(json.dumps(saveable_block))
+                f.write('\n')
+                f.write(json.dumps(saveable_transactions))
+                # Binary data using pickle - cannot do like before because we will not store text
+                # save_data = {
+                #     'chain': blockchain,
+                #     'ot': open_transactions
+                # }
+                # f.write(pickle.dumps(save_data))
+        except IOError:
+            print('Saving chain failed')
 
+    def proof_of_work(self):
+        last_block = self.chain[-1]
+        last_hash = hash_block(last_block)
+        # nonce will step per 1
+        proof = 0
+        verifier = Verification()
+        while not verifier.valid_proof(self.open_transactions, last_hash, proof):
+            proof += 1
+        return proof
 
-def proof_of_work():
-    last_block = blockchain[-1]
-    last_hash = hash_block(last_block)
-    # nonce will step per 1
-    proof = 0
-    verifier = Verification()
-    while not verifier.valid_proof(open_transactions, last_hash, proof):
-        proof += 1
-    return proof
+    def get_balance(self, participant):
+        tx_sender = [[tx.amount for tx in block.transactions
+                      if tx.sender == participant] for block in self.chain]
+        open_tx_sender = [tx.amount
+                          for tx in self.open_transactions if tx.sender == participant]
+        tx_sender.append(open_tx_sender)
+        amount_sent = reduce(
+            lambda tx_sum, tx_amt: tx_sum + sum(tx_amt) if len(tx_amt) > 0 else tx_sum + 0, tx_sender, 0)
+        # amount_sent = 0
+        # for tx in tx_sender:
+        #     if len(tx) > 0:
+        #         amount_sent += tx[0]
+        tx_recipient = [[tx.amount for tx in block.transactions
+                         if tx.recipient == participant] for block in self.chain]
+        amount_received = reduce(lambda tx_sum, tx_amt: tx_sum + sum(
+            tx_amt) if len(tx_amt) > 0 else tx_sum + 0, tx_recipient, 0)
+        # amount_received = 0
+        # for tx in tx_recipient:
+        #     if len(tx) > 0:
+        #         amount_received += tx[0]
+        return amount_received - amount_sent
 
+    def get_last_blockchain_value(self):
+        """ Returns the last result of the current blockchain. """
 
-def get_balance(participant):
-    tx_sender = [[tx.amount for tx in block.transactions
-                  if tx.sender == participant] for block in blockchain]
-    open_tx_sender = [tx.amount
-                      for tx in open_transactions if tx.sender == participant]
-    tx_sender.append(open_tx_sender)
-    amount_sent = reduce(
-        lambda tx_sum, tx_amt: tx_sum + sum(tx_amt) if len(tx_amt) > 0 else tx_sum + 0, tx_sender, 0)
-    # amount_sent = 0
-    # for tx in tx_sender:
-    #     if len(tx) > 0:
-    #         amount_sent += tx[0]
-    tx_recipient = [[tx.amount for tx in block.transactions
-                     if tx.recipient == participant] for block in blockchain]
-    amount_received = reduce(lambda tx_sum, tx_amt: tx_sum + sum(
-        tx_amt) if len(tx_amt) > 0 else tx_sum + 0, tx_recipient, 0)
-    # amount_received = 0
-    # for tx in tx_recipient:
-    #     if len(tx) > 0:
-    #         amount_received += tx[0]
-    return amount_received - amount_sent
+        if len(self.chain) < 1:
+            return None
 
+        # local variable - can call only function scope
+        # if global variable has been assign new variable inside function
+        # it will not update global variable value because inside function
+        # new local variable will be created for function scope
+        last_blockchain_value = self.chain[-1]
 
-def get_last_blockchain_value():
-    """ Returns the last result of the current blockchain. """
+        # if need to use global variable it need some keyword is
+        # global {variable}
+        # {variable} = new_value
 
-    if len(blockchain) < 1:
-        return None
+        # if index is -1 it will be last element
+        return last_blockchain_value
 
-    # local variable - can call only function scope
-    # if global variable has been assign new variable inside function
-    # it will not update global variable value because inside function
-    # new local variable will be created for function scope
-    last_blockchain_value = blockchain[-1]
+    # add default variable like javascript
 
-    # if need to use global variable it need some keyword is
-    # global {variable}
-    # {variable} = new_value
+    def add_transaction(self, recipient, sender, amount=1.0):
+        """ Append a new value to the blockchain
 
-    # if index is -1 it will be last element
-    return last_blockchain_value
+        Arguments:
+            :sender: The sender of coins
+            :recipient: The recipient of coins
+            :amount: The amount of coins (default=1.0)
+        """
 
+        # transaction = {
+        #     'sender': sender,
+        #     'recipient': recipient,
+        #     'amount': amount
+        # }
+        # to prevent order of dict changed
+        # transaction = OrderedDict(
+        #     [('sender', sender), ('recipient', recipient), ('amount', amount)])
+        transaction = Transaction(
+            sender, recipient, amount)
+        verifier = Verification()
+        # get_balance will be reference
+        if verifier.verify_transaction(transaction, self.get_balance):
+            self.open_transactions.append(transaction)
+            # participants.add(sender)
+            # participants.add(recipient)
+            self.save_data()
+            return True
+        return False
 
-# add default variable like javascript
-def add_transaction(recipient, amount=1.0, sender=owner):
-    """ Append a new value to the blockchain
+    def mine_block(self):
+        """ Mine block will append block to blockchain
+        """
+        last_block = self.chain[-1]
+        hashed_block = hash_block(last_block)
+        # proof before add reward transaction
+        proof = self.proof_of_work()
+        # reward_transaction = {
+        #     'sender': 'MINING',
+        #     'recipient': owner,
+        #     'amount': MINING_REWARD
+        # }
+        # reward_transaction = OrderedDict(
+        #     [('sender', 'MINING'), ('recipient', owner), ('amount', MINING_REWARD)])
+        reward_transaction = Transaction(
+            'MINING', self.node_id, MINING_REWARD)
 
-    Arguments:
-        :sender: The sender of coins
-        :recipient: The recipient of coins
-        :amount: The amount of coins (default=1.0)
-    """
-
-    # transaction = {
-    #     'sender': sender,
-    #     'recipient': recipient,
-    #     'amount': amount
-    # }
-    # to prevent order of dict changed
-    # transaction = OrderedDict(
-    #     [('sender', sender), ('recipient', recipient), ('amount', amount)])
-    transaction = Transaction(
-        sender, recipient, amount)
-    verifier = Verification()
-    # get_balance will be reference
-    if verifier.verify_transaction(transaction, get_balance):
-        open_transactions.append(transaction)
-        participants.add(sender)
-        participants.add(recipient)
-        save_data()
+        # we don't modify master data so, we need to copy it
+        copied_transactions = self.open_transactions[:]
+        copied_transactions.append(reward_transaction)
+        # block = {
+        #     'previous_hash': hashed_block,
+        #     'index': len(blockchain),
+        #     'transactions': copied_transactions,
+        #     'proof': proof
+        # }
+        block = Block(len(self.chain), hashed_block,
+                      copied_transactions, proof)
+        self.chain.append(block)
+        self.open_transactions = []
+        self.save_data()
         return True
-    return False
 
-
-def mine_block():
-    last_block = blockchain[-1]
-    hashed_block = hash_block(last_block)
-    # proof before add reward transaction
-    proof = proof_of_work()
-    # reward_transaction = {
-    #     'sender': 'MINING',
-    #     'recipient': owner,
-    #     'amount': MINING_REWARD
-    # }
-    # reward_transaction = OrderedDict(
-    #     [('sender', 'MINING'), ('recipient', owner), ('amount', MINING_REWARD)])
-    reward_transaction = Transaction(
-        'MINING', owner, MINING_REWARD)
-
-    # we don't modify master data so, we need to copy it
-    copied_transactions = open_transactions[:]
-    copied_transactions.append(reward_transaction)
-    # block = {
-    #     'previous_hash': hashed_block,
-    #     'index': len(blockchain),
-    #     'transactions': copied_transactions,
-    #     'proof': proof
-    # }
-    block = Block(len(blockchain), hashed_block, copied_transactions, proof)
-    blockchain.append(block)
-    return True
-
-# duplicate code must to stay as function
-
-
-print('Finished')
+    # duplicate code must to stay as function

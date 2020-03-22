@@ -616,3 +616,29 @@ print('done!')
 
 
   ```
+
+  **Instance vs Class vs Static methods & attibutes**
+  Instance: like before section
+  Class: no new object instance, follow example
+
+  ```python
+    class Test:
+      result = 1
+      @classmethod # Decorator - use for change behavior or something
+      def add(cls, a):
+        return cls.result + a
+
+    Test.add(3) # return 4
+  ```
+
+  Static: cannot access method from inside
+
+  ```python
+    class Test:
+      result = 1 # cannot access method from inside
+      @staticmethod # Decorator
+      def add(a):
+        return a
+
+    Test.add(3) # return 3
+  ```

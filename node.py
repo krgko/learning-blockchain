@@ -1,10 +1,12 @@
+from uuid import uuid4
+from blockchain import Blockchain
 from verification import Verification
 
+
 class Node:
-    def __init__(self, add_transaction, open_transactions):
-        self.blockchain = []
-        self.add_transaction = add_transaction
-        self.open_transactions = open_transactions
+    def __init__(self):
+        self.id = str(uuid4())
+        self.blockchain = Blockchain(self.id)
 
     def get_transaction_value(self):
         """ Returns the input of the user (new transaction amount) as a float """
@@ -27,11 +29,11 @@ class Node:
         # print('h: Manipulate the chain')
         print('q: Quit')
 
-    def print_blocks(self, blockchain):
+    def print_blocks(self):
         """ Print blocks in blockchain """
-        print('full chain: ', blockchain)
+        # print('full chain: ', self.blockchain.chain)
         # outout of blockchain
-        for block in blockchain:
+        for block in self.blockchain.chain:
             print('output block: ', block)
         else:
             print('-' * 20)
@@ -47,20 +49,21 @@ class Node:
                 # like destructure of javascript
                 recipient, amount = self.get_transaction_value()
                 # add the transaction to blockchain
-                if add_transaction(recipient=recipient, amount=amount):
+                if self.blockchain.add_transaction(recipient=recipient, sender=self.id, amount=amount):
                     print('Added transaction')
                 else:
                     print('Transaction failed')
-                print(open_transactions)
+                print(self.blockchain.open_transactions)
             elif user_choice == '2':
-                if mine_block():
-                    open_transactions = []
-                    save_data()
+                self.blockchain.mine_block()
+                # Do it on blockchain class is make more sense
+                # open_transactions = []
+                # self.blockchain.save_data()
             elif user_choice == '3':
-                self.print_blocks(self.blockchain)
+                self.print_blocks()
             elif user_choice == '4':
                 verifier = Verification()
-                if verifier.verify_transactions(open_transactions, get_balance):
+                if verifier.verify_transactions(self.blockchain.open_transactions, self.blockchain.get_balance):
                     print('All transactions valid')
                 else:
                     print('There is invalid transaction!')
@@ -77,12 +80,17 @@ class Node:
             else:
                 print('Please input a valid input from choice')
             verifier = Verification()
-            if not verifier.verify_chain(self.blockchain):
-                self.print_blocks(self.blockchain)
+            if not verifier.verify_chain(self.blockchain.chain):
+                self.print_blocks()
                 print('Invalid chain!')
                 break
 
             print('Balance of {} is {:.10}'.format(
-                owner, str(get_balance(owner))))
+                self.id, str(self.blockchain.get_balance(self.id))))
         else:
             print('User left!')
+        print('Finished')
+
+
+node = Node()
+node.listen_for_input()
