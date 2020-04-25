@@ -4,7 +4,8 @@ DIFFICULTY = 2
 
 
 class Verification:
-    def valid_proof(self, transactions, last_hash, proof):
+    @classmethod
+    def valid_proof(cls, transactions, last_hash, proof):
         # make puzzle question
         # guess = (str(transactions) + str(last_hash) + str(proof)).encode()
         guess = (str([tx.to_ordered_dict() for tx in transactions]) +
@@ -17,7 +18,8 @@ class Verification:
         # checking valid hash 00 - 00 is difficulty
         return guess_hash[0: DIFFICULTY] == '0' * DIFFICULTY
 
-    def verify_chain(self, blockchain):
+    @classmethod
+    def verify_chain(cls, blockchain):
         """ Verify the blockchain if return True that means the blockchain is valid """
         for (index, block) in enumerate(blockchain):
             if index == 0:
@@ -25,14 +27,16 @@ class Verification:
             if block.previous_hash != hash_block(blockchain[index - 1]):
                 return False
             # check valid_proof before add reward
-            if not self.valid_proof(block.transactions[:-1], block.previous_hash, block.proof):
+            if not cls.valid_proof(block.transactions[:-1], block.previous_hash, block.proof):
                 return False
         return True
 
-    def verify_transaction(self, transaction, get_balance):
+    @staticmethod
+    def verify_transaction(transaction, get_balance):
         sender_balance = get_balance(transaction.sender)
         return sender_balance >= transaction.amount
 
-    def verify_transactions(self, open_transactions, get_balance):
+    @classmethod
+    def verify_transactions(cls, open_transactions, get_balance):
         """ Verify transaction list """
-        return all([self.verify_transaction(tx, get_balance) for tx in open_transactions])
+        return all([cls.verify_transaction(tx, get_balance) for tx in open_transactions])

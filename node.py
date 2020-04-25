@@ -25,14 +25,24 @@ class Node:
         print('1: Add a new transaction value')
         print('2: Mine a new block')
         print('3: Output the blockchain blocks')
+        print('3f: Output the blockchain blocks - full block')
         print('4: Check transaction validlity')
         # print('h: Manipulate the chain')
         print('q: Quit')
 
-    def print_blocks(self):
+    def print_blocks(self, simplified=False):
         """ Print blocks in blockchain """
         # print('full chain: ', self.blockchain.chain)
         # outout of blockchain
+        simplified = bool(simplified)
+        if simplified:
+            # Access the copy of the chain
+            for (index, block) in enumerate(self.blockchain.chain):
+                simplify_block = [
+                    transaction.amount for transaction in block.transactions if transaction.sender != "MINING"]
+                print(f"block {str(index)}: {simplify_block}")
+            return
+
         for block in self.blockchain.chain:
             print('output block: ', block)
         else:
@@ -53,17 +63,19 @@ class Node:
                     print('Added transaction')
                 else:
                     print('Transaction failed')
-                print(self.blockchain.open_transactions)
+                print(self.blockchain.get_open_transactions())
             elif user_choice == '2':
                 self.blockchain.mine_block()
                 # Do it on blockchain class is make more sense
                 # open_transactions = []
                 # self.blockchain.save_data()
             elif user_choice == '3':
+                self.print_blocks(simplified=True)
+            elif user_choice == '3f':
                 self.print_blocks()
             elif user_choice == '4':
-                verifier = Verification()
-                if verifier.verify_transactions(self.blockchain.open_transactions, self.blockchain.get_balance):
+                # We can do this due to change to classmethod or statismethod - no need self
+                if Verification.verify_transactions(self.blockchain.get_open_transactions(), self.blockchain.get_balance):
                     print('All transactions valid')
                 else:
                     print('There is invalid transaction!')
@@ -79,8 +91,7 @@ class Node:
                 waiting_for_input = False
             else:
                 print('Please input a valid input from choice')
-            verifier = Verification()
-            if not verifier.verify_chain(self.blockchain.chain):
+            if not Verification.verify_chain(self.blockchain.chain):
                 self.print_blocks()
                 print('Invalid chain!')
                 break

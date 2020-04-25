@@ -4,7 +4,14 @@ This project all about learning blockchain with consensus algorithm PoW (Proof o
 
 > If we understand this we will able to develop blockchain with any language
 
+## Start App
+
+```bash
+python3 node.py
+```
+
 - [Learning blockchain](#learning-blockchain)
+  - [Start App](#start-app)
   - [Requirement](#requirement)
   - [REPL](#repl)
   - [Blockchain](#blockchain)
@@ -61,7 +68,10 @@ This project all about learning blockchain with consensus algorithm PoW (Proof o
     - [OOP](#oop)
       - [VS Dict](#vs-dict)
       - [Why need OOP](#why-need-oop)
+    - [OOP example with inheritance](#oop-example-with-inheritance)
     - [Instance vs Class vs Static methods & attibutes](#instance-vs-class-vs-static-methods--attibutes)
+    - [Private attribute](#private-attribute)
+    - [Attribute vs Properties](#attribute-vs-properties)
 
 ## Requirement
 
@@ -702,7 +712,7 @@ Can hold data as object, not based on blueprint
 
 Structured and created quickly, Also include method not just a field and allow to write clean code
 
-OOP example with inheritance
+### OOP example with inheritance
 
 ```python
 ############### Vehicle.py
@@ -740,11 +750,11 @@ class Vehicle:
 from vehicle import Vehicle
 
 class Car(Vehicle):
-def **init**(self, s_top_speed=100): # Access to the base class
-super().**init**(s_top_speed)
+    def __init__(self, s_top_speed=100): # Access to the base class
+      super().__init__(s_top_speed) # Auto add variable into other class
 
-      def print_looks(self):
-          print('Looks what the nice car is..')
+    def print_looks(self):
+        print('Looks what the nice car is..')
 
 car1 = Car()
 car1.drive()
@@ -788,8 +798,8 @@ print(car2.get_warning())
 from vehicle import Vehicle
 
 class Bus(Vehicle):
-def **init**(self, s_top_speed=100):
-super().**init**(s_top_speed)
+    def __init__(self, s_top_speed=100):
+        super().__init__(s_top_speed)
 
           # attribute of instance
           # public
@@ -798,8 +808,8 @@ super().**init**(s_top_speed)
           self.__warnings = []
           self.passengers = []
 
-      def add_group(self, passenger):
-          self.passengers.append(passenger)
+    def add_group(self, passenger):
+        self.passengers.append(passenger)
 
 bus1 = Bus(80)
 bus1.add_group(['A', 'B', 'C'])
@@ -815,8 +825,8 @@ Class: no new object instance, follow example
 ```python
   class Test:
     result = 1
-    @classmethod # Decorator - use for change behavior or something
-    def add(cls, a):
+    @classmethod # Decorator - use for change behavior or something | need to access something from the class
+    def add(cls, a): # Need cls instead of self
       return cls.result + a
 
   Test.add(3) # return 4
@@ -827,9 +837,60 @@ Static: cannot access method from inside
 ```python
   class Test:
     result = 1 # cannot access method from inside
-    @staticmethod # Decorator
-    def add(a):
+    @staticmethod # Decorator | works only input gets in no change class in big picture
+    def add(a): # No self needed
       return a
 
   Test.add(3) # return 3
+```
+
+### Private attribute
+
+Just add `__` in front of variable like `self.__blockchain`
+
+Need getter function for calling from outside class
+
+```py
+### A.py
+class A:
+  def __init__(self):
+    self.__private_attr = "test_attr"
+
+  def get_private_attr(self):
+    return self.__private_attr
+
+### B.py
+from A import A
+
+print(A.get_private_attr())
+```
+
+### Attribute vs Properties
+
+**Attribute:** Variable that attached into a class
+
+```py
+class A:
+  result = 5
+
+  def __init__(self):
+    self.name = 'Test' # This is an attribute
+```
+
+**Properties:**
+
+Can define logic freely
+
+```py
+class B:
+  def __init__(self):
+    self.name = 'Test'
+
+  @property # getter | return copy of __name # property
+  def name(self):
+    return self.__name
+
+  @name.setter # setter # property
+  def name(self, val):
+    self.__name = val
 ```

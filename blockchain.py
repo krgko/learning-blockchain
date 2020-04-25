@@ -21,7 +21,7 @@ class Blockchain:
         self.genesis_block = Block(0, '', [], 0)
         # Initialized blockchain list
         self.chain = [self.genesis_block]
-        self.open_transactions = []
+        self.__open_transactions = []
         self.load_data()
         self.node_id = node_id
 
@@ -40,6 +40,18 @@ class Blockchain:
 
     # owner = 'Golf'  # person who send coin to others
     # participants = {'Golf'}
+
+    @property
+    def chain(self):
+        # return copy of chain and append to chain not the real chain
+        return self.__chain[:]
+
+    @chain.setter
+    def chain(self, val):
+        self.__chain = val
+
+    def get_open_transactions(self):
+        return self.__open_transactions[:]
 
     def load_data(self):
         # global blockchain  # Tell python that we have these global vars
@@ -74,7 +86,7 @@ class Blockchain:
                         updated_transaction = Transaction(
                             tx['sender'], tx['recipient'], tx['amount'])
                         updated_transactions.append(updated_transaction)
-                    self.open_transactions = updated_transactions
+                    self.__open_transactions = updated_transactions
                     # blockchain = file_content['chain']
                     # open_transactions = file_content['ot']
         except (IOError, IndexError):
@@ -96,10 +108,10 @@ class Blockchain:
             with open('blockchain.txt', 'w') as f:
                 # Convert object to dict for saving
                 saveable_block = [block.__dict__ for block in [
-                    Block(b.index, b.previous_hash, [tx.__dict__ for tx in b.transactions], b.proof, b.timestamp) for b in self.chain]]
+                    Block(b.index, b.previous_hash, [tx.__dict__ for tx in b.transactions], b.proof, b.timestamp) for b in self.__chain]]
                 # Can be do like this or apply every transaction
                 saveable_transactions = [
-                    tx.__dict__ for tx in self.open_transactions]
+                    tx.__dict__ for tx in self.__open_transactions]
 
                 # with open('blockchain.b', 'wb') as f:
                 # All blockchain means historical data
@@ -121,20 +133,20 @@ class Blockchain:
             print('Saving chain failed')
 
     def proof_of_work(self):
-        last_block = self.chain[-1]
+        last_block = self.__chain[-1]
         last_hash = hash_block(last_block)
         # nonce will step per 1
         proof = 0
         verifier = Verification()
-        while not verifier.valid_proof(self.open_transactions, last_hash, proof):
+        while not verifier.valid_proof(self.__open_transactions, last_hash, proof):
             proof += 1
         return proof
 
     def get_balance(self, participant):
         tx_sender = [[tx.amount for tx in block.transactions
-                      if tx.sender == participant] for block in self.chain]
+                      if tx.sender == participant] for block in self.__chain]
         open_tx_sender = [tx.amount
-                          for tx in self.open_transactions if tx.sender == participant]
+                          for tx in self.__open_transactions if tx.sender == participant]
         tx_sender.append(open_tx_sender)
         amount_sent = reduce(
             lambda tx_sum, tx_amt: tx_sum + sum(tx_amt) if len(tx_amt) > 0 else tx_sum + 0, tx_sender, 0)
@@ -143,7 +155,7 @@ class Blockchain:
         #     if len(tx) > 0:
         #         amount_sent += tx[0]
         tx_recipient = [[tx.amount for tx in block.transactions
-                         if tx.recipient == participant] for block in self.chain]
+                         if tx.recipient == participant] for block in self.__chain]
         amount_received = reduce(lambda tx_sum, tx_amt: tx_sum + sum(
             tx_amt) if len(tx_amt) > 0 else tx_sum + 0, tx_recipient, 0)
         # amount_received = 0
@@ -155,14 +167,14 @@ class Blockchain:
     def get_last_blockchain_value(self):
         """ Returns the last result of the current blockchain. """
 
-        if len(self.chain) < 1:
+        if len(self.__chain) < 1:
             return None
 
         # local variable - can call only function scope
         # if global variable has been assign new variable inside function
         # it will not update global variable value because inside function
         # new local variable will be created for function scope
-        last_blockchain_value = self.chain[-1]
+        last_blockchain_value = self.__chain[-1]
 
         # if need to use global variable it need some keyword is
         # global {variable}
@@ -192,10 +204,9 @@ class Blockchain:
         #     [('sender', sender), ('recipient', recipient), ('amount', amount)])
         transaction = Transaction(
             sender, recipient, amount)
-        verifier = Verification()
         # get_balance will be reference
-        if verifier.verify_transaction(transaction, self.get_balance):
-            self.open_transactions.append(transaction)
+        if Verification.verify_transaction(transaction, self.get_balance):
+            self.__open_transactions.append(transaction)
             # participants.add(sender)
             # participants.add(recipient)
             self.save_data()
@@ -205,7 +216,7 @@ class Blockchain:
     def mine_block(self):
         """ Mine block will append block to blockchain
         """
-        last_block = self.chain[-1]
+        last_block = self.__chain[-1]
         hashed_block = hash_block(last_block)
         # proof before add reward transaction
         proof = self.proof_of_work()
@@ -220,7 +231,7 @@ class Blockchain:
             'MINING', self.node_id, MINING_REWARD)
 
         # we don't modify master data so, we need to copy it
-        copied_transactions = self.open_transactions[:]
+        copied_transactions = self.__open_transactions[:]
         copied_transactions.append(reward_transaction)
         # block = {
         #     'previous_hash': hashed_block,
@@ -228,10 +239,10 @@ class Blockchain:
         #     'transactions': copied_transactions,
         #     'proof': proof
         # }
-        block = Block(len(self.chain), hashed_block,
+        block = Block(len(self.__chain), hashed_block,
                       copied_transactions, proof)
-        self.chain.append(block)
-        self.open_transactions = []
+        self.__chain.append(block)
+        self.__open_transactions = []
         self.save_data()
         return True
 
