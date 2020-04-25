@@ -2,7 +2,66 @@
 
 This project all about learning blockchain with consensus algorithm PoW (Proof of Work)
 
-**If we understand this we will able to develop blockchain with any language**
+> If we understand this we will able to develop blockchain with any language
+
+- [Learning blockchain](#learning-blockchain)
+  - [Requirement](#requirement)
+  - [REPL](#repl)
+  - [Blockchain](#blockchain)
+  - [Proof of work](#proof-of-work)
+    - [Process](#process)
+    - [Cheating](#cheating)
+  - [Important note](#important-note)
+  - [New things learned from python](#new-things-learned-from-python)
+    - [Variable](#variable)
+    - [Casting](#casting)
+    - [Number-operation](#number-operation)
+    - [Weird behavior of python number](#weird-behavior-of-python-number)
+    - [List](#list)
+    - [Function](#function)
+    - [Default argument](#default-argument)
+    - [Variable scope](#variable-scope)
+    - [comment for document](#comment-for-document)
+    - [loop](#loop)
+    - [if-else](#if-else)
+    - [continue-break](#continue-break)
+    - [not](#not)
+    - [and,or](#andor)
+    - [grouping conditions](#grouping-conditions)
+    - [switch case](#switch-case)
+    - [is & in](#is--in)
+    - [For loop with else](#for-loop-with-else)
+    - [Range](#range)
+    - [While](#while)
+    - [List and String](#list-and-string)
+    - [Format](#format)
+    - [Escape String](#escape-string)
+    - [DS-List](#ds-list)
+    - [Set](#set)
+    - [Tuple](#tuple)
+    - [Dictionary](#dictionary)
+    - [Enumerate](#enumerate)
+    - [Copiled other complex type](#copiled-other-complex-type)
+    - [Shallow vs deep copies](#shallow-vs-deep-copies)
+    - [is and ==](#is-and)
+    - [All and Any](#all-and-any)
+    - [Comparison between data structures (python)](#comparison-between-data-structures-python)
+    - [List comprehension](#list-comprehension)
+    - [Lambda function](#lambda-function)
+    - [Reducing list](#reducing-list)
+    - [Import](#import)
+    - [Unpack argument of function](#unpack-argument-of-function)
+    - [Importing](#importing)
+    - [Handling File Access](#handling-file-access)
+    - [Instead of JSON change to Binary](#instead-of-json-change-to-binary)
+    - [Pickle vs JSON](#pickle-vs-json)
+    - [Debugger](#debugger)
+    - [Try-except](#try-except)
+    - [Which one should handle](#which-one-should-handle)
+    - [OOP](#oop)
+      - [VS Dict](#vs-dict)
+      - [Why need OOP](#why-need-oop)
+    - [Instance vs Class vs Static methods & attibutes](#instance-vs-class-vs-static-methods--attibutes)
 
 ## Requirement
 
@@ -42,14 +101,15 @@ Mining is challenging -> for security and control amount of coins
 - Take block data into account -> **If number is correct will added to block metadata then commit with transaction and previous hash**
 - Other node can verify PoW easily
 
-**Process**
+### Process
 
 - Transactions - difference from Nonce
 - Previous hash
 - Proof (Nonce: Number used once) - increment in loop 0, ... n
   Checking PoW by hash all above into a hash e.g `00[a-f0-9]{62}` 00 is difficulty - miner need to find a correct hash
 
-**Cheating**
+### Cheating
+
 Add old block -> check hash will failed to matched with previous hash
 Nonce changed -> that is a part of hash all of hashes after cheated block will change and PoW takes time so, all the block will be recalculated (These step will occur with block has been validated)
 
@@ -59,221 +119,307 @@ Nonce changed -> that is a part of hash all of hashes after cheated block will c
 
 ## New things learned from python
 
-- **Variable:** assign variable python has no data type(weak type)
-  ```
-    variable = 'string' # string
-    variable = 1        # int
-    variable = 1.2      # float
-    variable = True     # boolean
-  ```
-- **Casting:** make current type to target type
-  ```
-    int(12), str(12) # type string
-  ```
-- **Number-operation**
-  ```
-    +, - , * , /
-    ** - power
-    // - divide with floor
-    % - modulo
-  ```
-  **Note:** +, \* can be worked with string to concatenate or iterate
-- **Weird behavior of python number** - if number cannot divide that got finite degit and do operation like `1-0.9 the answer will be 0.0999999998`
-- **List:** or array on other programming language
+### Variable
 
-  ```
-    list.append() - append element to list
-    list.remove(index) - remove with index
-    list.pop() - pop element from list
+assign variable python has no data type(weak type)
 
-    # accessing last element in list for python
-    # list[-1]
-  ```
-
-- **Function:** wrapper of codes for calling more than once
-  ```
-    def function_name():
-        ...
-        return {something}
-  ```
-- **Default argument**
-  ```
-    def function_name(variable1='something_any_type'):
-        ...
-  ```
-- **Variable scope:** contains with 2 types are global and local
-
-  ```
-    name = input('name: ') # 'xx'
-
-    def name_mod():
-        """ Name will not change """
-        name = 'yy' # name does not changed
-
-    def name_mod_global():
-        """ Name will change """
-        global name
-        name = 'yy' # name changed
-  ```
-
-  **Note:** Why function cannot change? because python always create local variable with variable declared inside function scope
-
-- **comment for document:** create comment by use """(triple double quotes)
-- **loop:** python contains for loop and while loop
-
-  ```
-    # iterate through elements list
-    for elem in list:
-      ...
-
-    # repeat code until true
-    while True:
-      ...
-  ```
-
-- **if-else:** condition like other language
-  ```
-    if condition:
-      ...
-    elif condition:
-      ...
-    else:
-      ...
-  ```
-- **continue-break:** this keyward will be in for-loop or while loop
-
-  ```
-    # end current iterate and continue iteration
-    continue
-
-    # end loop
-    break
-  ```
-
-- **not:** use for check in negative case work only string case
-  ```
-    if char not in str:
-      ...
-  ```
-- **and,or:** use for join condition, the result can check from truty table
-  ```
-    condition_1 and condition_2
-    condition_1 or condition_2
-  ```
-- **grouping conditions:** conditions can be combined to check like
-  ```
-    (condition_1 {logic} condition_2) {logic} condition_3
-  ```
-- **switch case:** _there is no switch case on python use if-else instead_
-- **is & in:** is - check are they really the same object, in - check is element in that data object or not
-
-  ```
-    test = [1, 2, 3]
-    test2 = [1, 2, 3]
-
-    test is test2 # False
-    1 in test # True
-  ```
-
-- **For loop with else** else can added after loop so, it will do inside else after loop has been broken
-  ```
-    for {condition}:
-      # do stuff
-    else:
-      # do something
-  ```
-- **Range** because there is no `for(i = 0; i < 10; i++)` in python range _accept only integer_
-
-  ```
-    for element in range({number}):
-      # do stuff
-
-    for element in range({start}, {stop}, {step}):
-      # do stuff
-  ```
-
-- **While** loop as long as condition is _True_
-- **List and String**
-
-  ```
-    list = ['h', 'e']
-    text = 'he'
-
-    # can use with
-    for c in {list|string}:
-      print(c)
-
-    # helper to know method able to use with
-    help({variable})
-  ```
-
-  string does not support index assignment but list can
-
-- **Format** control the looks of print
-
-  ```
-    print('string: ' + {string} + 'int: ' + {int})
-
-    # unable to assign but need to casting as string first
-
-    'string: {} int: {}'.format('hello', 5)
-    # able to assign value
-
-    # can assign argument by index by
-    ...format('hello', 5)
-    # if reference {0} means 'hello'
-
-    # named argument
-    ...format(h='hello')
-    # ref {h} means 'hello'
-
-    # number
-    {:>3.5f}...format(1.23)
-    > means step space
-    # [][][]1.23000
-  ```
-
-  ref: https://pyformat.info/
-  _For python 3.6+_
-
-  ```
-    f'string: {a} int: {b}'
-  ```
-
-- **Escape String** can be use "'" double quote or '\'' backslash
-  ref: https://docs.python.org/2.0/ref/strings.html
-- **List** Mutable, one type `['x', 'y']`
-
-  ```
-    # iteration example
-    for element in list:
-      new_list.append(element)
-
-    new_list = [el for el in list] # the result will be the same
-
-    new_list = [el for el in list if el % 2 == 0] # added if
-  ```
-
-- **Set** Immutable, unorderered, no duplicate, one type `{'x', 'y'}`
-  ```
-    test_set = set('xyz') # {'x', 'y', 'z'}
-    test_set2 = set(['xyz', 'abc']) # {'xyz', 'abc'}
-  ```
-- **Tuple** Immutable, ordered, duplicated, multiple type `('x', 'y')`
-- **Dictionary** Mutable. unordered, no duplicate key like `json object`
-  ```
-    test = [('a': 1), ('b': 2)]
-    # make a list to dictionary
-    dict_test = {key: value for (key, value) in test}
-  ```
-- **Enumerate** if in for loop it will return index and data of iteration
-  ```
-    for (index, data) in enumerate(list):
-      ... do stuff
-  ```
-- **Copiled other complex type** `the basic type` can coplied because it reference by value but `the complex type` reference by address (pass by reference) like pointer
-
+```py
+  variable = 'string' # string
+  variable = 1        # int
+  variable = 1.2      # float
+  variable = True     # boolean
 ```
+
+### Casting
+
+make current type to target type
+
+```py
+  int(12), str(12) # type string
+```
+
+### Number-operation
+
+```py
+  +, - , * , /
+  ** - power
+  // - divide with floor
+  % - modulo
+```
+
+**Note:** +, \* can be worked with string to concatenate or iterate
+
+### Weird behavior of python number
+
+if number cannot divide that got finite degit and do operation like `1-0.9 the answer will be 0.0999999998`
+
+### List
+
+or array on other programming language
+
+```py
+  list.append() - append element to list
+  list.remove(index) - remove with index
+  list.pop() - pop element from list
+
+  # accessing last element in list for python
+  # list[-1]
+```
+
+### Function
+
+wrapper of codes for calling more than once
+
+```py
+  def function_name():
+      ...
+      return {something}
+```
+
+### Default argument
+
+```py
+  def function_name(variable1='something_any_type'):
+      ...
+```
+
+### Variable scope
+
+contains with 2 types are global and local
+
+```py
+  name = input('name: ') # 'xx'
+
+  def name_mod():
+      """ Name will not change """
+      name = 'yy' # name does not changed
+
+  def name_mod_global():
+      """ Name will change """
+      global name
+      name = 'yy' # name changed
+```
+
+**Note:** Why function cannot change? because python always create local variable with variable declared inside function scope
+
+### comment for document
+
+create comment by use """(triple double quotes)
+
+### loop
+
+python contains for loop and while loop
+
+```py
+  # iterate through elements list
+  for elem in list:
+    ...
+
+  # repeat code until true
+  while True:
+    ...
+```
+
+### if-else
+
+condition like other language
+
+```py
+  if condition:
+    ...
+  elif condition:
+    ...
+  else:
+    ...
+```
+
+### continue-break
+
+this keyward will be in for-loop or while loop
+
+```py
+  # end current iterate and continue iteration
+  continue
+
+  # end loop
+  break
+```
+
+### not
+
+use for check in negative case work only string case
+
+```py
+  if char not in str:
+    ...
+```
+
+### and,or
+
+use for join condition, the result can check from truty table
+
+```py
+  condition_1 and condition_2
+  condition_1 or condition_2
+```
+
+### grouping conditions
+
+conditions can be combined to check like
+
+```py
+  (condition_1 {logic} condition_2) {logic} condition_3
+```
+
+### switch case
+
+there is no switch case on python use if-else instead\_
+
+### is & in
+
+is - check are they really the same object, in - check is element in that data object or not
+
+```py
+  test = [1, 2, 3]
+  test2 = [1, 2, 3]
+
+  test is test2 # False
+  1 in test # True
+```
+
+### For loop with else
+
+else can added after loop so, it will do inside else after loop has been broken
+
+```py
+  for {condition}:
+    # do stuff
+  else:
+    # do something
+```
+
+### Range
+
+because there is no `for(i = 0; i < 10; i++)` in python range _accept only integer_
+
+```py
+  for element in range({number}):
+    # do stuff
+
+  for element in range({start}, {stop}, {step}):
+    # do stuff
+```
+
+### While
+
+loop as long as condition is _True_
+
+### List and String
+
+```py
+  list = ['h', 'e']
+  text = 'he'
+
+  # can use with
+  for c in {list|string}:
+    print(c)
+
+  # helper to know method able to use with
+  help({variable})
+```
+
+string does not support index assignment but list can
+
+### Format
+
+control the looks of print
+
+```py
+  print('string: ' + {string} + 'int: ' + {int})
+
+  # unable to assign but need to casting as string first
+
+  'string: {} int: {}'.format('hello', 5)
+  # able to assign value
+
+  # can assign argument by index by
+  ...format('hello', 5)
+  # if reference {0} means 'hello'
+
+  # named argument
+  ...format(h='hello')
+  # ref {h} means 'hello'
+
+  # number
+  {:>3.5f}...format(1.23)
+  > means step space
+  # [][][]1.23000
+```
+
+ref: [pyformat](https://pyformat.info/)
+_For python 3.6+_
+
+```py
+  f'string: {a} int: {b}'
+```
+
+### Escape String
+
+can be use "'" double quote or '\'' backslash
+
+ref: [string-doc](https://docs.python.org/2.0/ref/strings.html)
+
+### DS-List
+
+Mutable, one type `['x', 'y']`
+
+```py
+  # iteration example
+  for element in list:
+    new_list.append(element)
+
+  new_list = [el for el in list] # the result will be the same
+
+  new_list = [el for el in list if el % 2 == 0] # added if
+```
+
+### Set
+
+Immutable, unorderered, no duplicate, one type `{'x', 'y'}`
+
+```py
+  test_set = set('xyz') # {'x', 'y', 'z'}
+  test_set2 = set(['xyz', 'abc']) # {'xyz', 'abc'}
+```
+
+### Tuple
+
+Immutable, ordered, duplicated, multiple type `('x', 'y')`
+
+### Dictionary
+
+Mutable. unordered, no duplicate key like `json object`
+
+```py
+  test = [('a': 1), ('b': 2)]
+  # make a list to dictionary
+  dict_test = {key: value for (key, value) in test}
+```
+
+### Enumerate
+
+if in for loop it will return index and data of iteration
+
+```py
+  for (index, data) in enumerate(list):
+    ... do stuff
+```
+
+### Copiled other complex type
+
+`the basic type` can coplied because it reference by value but `the complex type` reference by address (pass by reference) like pointer
+
+```py
   list = [A, B, C]
   copied = list
   copied = copied.append(Z)
@@ -293,16 +439,25 @@ Nonce changed -> that is a part of hash all of hashes after cheated block will c
   # sets (sets = {1,2,3,4}) does not work
 ```
 
-- **Shallow vs deep copies** `list[:]` this is shallow copy bacause for the complex list like array of dictionary will not full copied
-  Note: the inner data structures cannot copied
-- **is and ==** `==` will check only value but `is` will check in address level if the same that means it is the same object
-  **Note:** Trying by using data like list
+### Shallow vs deep copies
 
-**Additional:** https://docs.python.org/3/tutorial/datastructures.html#dictionaries
+`list[:]` this is shallow copy bacause for the complex list like array of dictionary will not full copied
 
-- **All and Any** By example or think it like `AND, OR`
+**Note:** the inner data structures cannot copied
 
-```
+### is and ==
+
+`==` will check only value but `is` will check in address level if the same that means it is the same object
+
+**Note:** Trying by using data like list
+
+**Additional:** [dictionaries](https://docs.python.org/3/tutorial/datastructures.html#dictionaries)
+
+### All and Any
+
+By example or think it like `AND, OR`
+
+```py
   any([True, False, False]) # return True
   all([True, False, False]) # return False
 
@@ -311,7 +466,7 @@ Nonce changed -> that is a part of hash all of hashes after cheated block will c
   all([n > 0 for n in list])
 ```
 
-- **Comparison between data structures**
+### Comparison between data structures (python)
 
 | type/test  |           list-comprehension ex. [e for e in set]           | iteration | indexing |      unpacking ex. a,b = list      |
 | :--------: | :---------------------------------------------------------: | :-------: | :------: | :--------------------------------: |
@@ -320,10 +475,11 @@ Nonce changed -> that is a part of hash all of hashes after cheated block will c
 |   tuple    |                              Y                              |     Y     |    Y     | Y (if unpack all element in there) |
 | dictionary | Y (with items and while iterate need to use (index, value)) |     Y     |    Y     |        Y (return only keys)        |
 
-- **List comprehension**
-  Use `map()` to iterate list with do something with it by function
+### List comprehension
 
-```
+Use `map()` to iterate list with do something with it by function
+
+```py
   map({function}, {variable})
 
   def mul(e):
@@ -335,23 +491,29 @@ Nonce changed -> that is a part of hash all of hashes after cheated block will c
   # if does not use list casting it will return obj address
 ```
 
-- **Lambda function**
-  For above lecture section
+### Lambda function
 
-```
+Relate with above lecture section
+
+```py
   list(map(lamda el: el * 2, list))
 
   # after lambda declaration will be return data
 ```
 
-- **Reducing list**
-  Such as 1,2,3,4,5,6 => 21
-- **Import**
-  `import {package_name}`
-- **Unpack argument of function**
-  Single `*` multiple argument, Double `**` dictionary aka. keyword_arguments
+### Reducing list
 
-```
+Such as 1,2,3,4,5,6 => 21
+
+### Import
+
+`import {package_name}`
+
+### Unpack argument of function
+
+Single `*` multiple argument, Double `**` dictionary aka. keyword_arguments
+
+```py
   def x(*args):
     print(args)
 
@@ -363,13 +525,17 @@ Nonce changed -> that is a part of hash all of hashes after cheated block will c
       print(k, arg)
 ```
 
-- **Importing**
-  Use keyword `import <package_name>` can call with `<package_name>.method`
-  Or using alias `import <package_name> as <name>` call by `<name>.method`
-  Or import only selected feature like `from <package> import <feature_name>`
-  `from <package_name> import *` but not recomended because it might override some feature that imported
+### Importing
 
--**Handling File Access**
+Use keyword `import <package_name>` can call with `<package_name>.method`
+
+Or using alias `import <package_name> as <name>` call by `<name>.method`
+
+Or import only selected feature like `from <package> import <feature_name>`
+
+`from <package_name> import something<*>` but not recomended because it might override some feature that imported
+
+### Handling File Access
 
 ```python
 # Life cycle
@@ -431,142 +597,77 @@ user_input = input('Testing:')
 print('done!')
 ```
 
-- **Instead of JSON change to Binary** use pickle and other method like json
+### Instead of JSON change to Binary
 
-- **Pickle vs JSON**
-  Pickle works for all python type, binary format
-  JSON works only json, convert data to text
+use pickle and other method like json
 
-- **Debugger**
-  in vscode we need to create JSON on launch.json. You can review the variable by run debugger
+### Pickle vs JSON
 
-- **Try-except** python is a code block so it can catch an error block by block
+Pickle works for all python type, binary format
+JSON works only json, convert data to text
 
-  ```python
-    try:
-      # line of code
-    except (TYPE1, TYPE2):
-      # handling
-    except TYPE1:
-      # handling
-    except: # All error catch should be not great idea
-      # other error does not match type will comes here
-    finally:
-      # even though error or not will come here
-  ```
+### Debugger
 
-  **Which one should handle?** Only unpredictable should handle such IOError, OSError
+in vscode we need to create JSON on launch.json. You can review the variable by run debugger
 
-- **OOP** Treat procedural as class and object with using method
+### Try-except
 
-  - Class is like a blueprint
-  - Object created by class we can call it is instance
+python is a code block so it can catch an error block by block
 
-  Example OOP
+```python
+  try:
+    # line of code
+  except (TYPE1, TYPE2):
+    # handling
+  except TYPE1:
+    # handling
+  except: # All error catch should be not great idea
+    # other error does not match type will comes here
+  finally:
+    # even though error or not will come here
+```
 
-  ```python
-    class Car:
-    # Class attributes
-    # top_speed = 100
-    # warnings = []
+### Which one should handle
 
-    # constructor
-    def __init__(self, s_top_speed=100):
-        super().__init__()
-        # attribute of instance
-        # public
-        self.top_speed = s_top_speed
-        # private
-        self.__warnings = []
+Only unpredictable should handle such IOError, OSError
 
-    def __repr__(self):
-        print('Printing...')
-        return 'Top speed: {}, Warnings: {}'.format(self.top_speed, len(self.__warnings))
+### OOP
 
-    def add_warning(self, warning_text):
-        self.__warnings.append(warning_text)
+Treat procedural as class and object with using method
 
-    def get_warning(self):
-        return self.__warnings
+- Class is like a blueprint
+- Object created by class we can call it is instance
 
-    # Self represent instance of the class
-    def drive(self):
-        print('Broonnnnnnnnnnnnnnnn {} kph'.format(self.top_speed))
+Example OOP
 
-    car1 = Car()
-    car1.drive()
-    # car1.warnings.append('Warnings')
-    car1.add_warning('Warnings')
-    # print(car1.__warnings) # Cannot called from outside
-    # print(car1.__dict__)  # Print attribute as dictionary
-    # print(car1.top_speed.__str__())  # String output
-    # print(car1.__repr__())  # General output
-    print(car1)  # General output like above
-    print(car1.get_warning())
+```python
+  class Car:
+  # Class attributes
+  # top_speed = 100
+  # warnings = []
 
-    print('#########')
-    # Directly attach the class, Should not do
-    # Need to make it effect only an instance
-    # Car.top_speed = 200
-    # car1.warnings.append('Warnings')
+  # constructor
+  def __init__(self, s_top_speed=100):
+      super().__init__()
+      # attribute of instance
+      # public
+      self.top_speed = s_top_speed
+      # private
+      self.__warnings = []
 
-    car2 = Car(200)
-    car2.drive()
-    # print(car2.__warnings)
-    # print(car2.__dict__)  # Print attribute as dictionary
-    print(car2.get_warning())
+  def __repr__(self):
+      print('Printing...')
+      return 'Top speed: {}, Warnings: {}'.format(self.top_speed, len(self.__warnings))
 
-  ```
+  def add_warning(self, warning_text):
+      self.__warnings.append(warning_text)
 
-  **VS Dict** Can hold data as object, not based on blueprint
-  **Why need OOP** Structured and created quickly, Also include method not just a field and allow to write clean code
+  def get_warning(self):
+      return self.__warnings
 
-  OOP example with inheritance
-
-  ```python
-  ############### Vehicle.py
-
-  class Vehicle:
-    # Class attributes
-    # top_speed = 100
-    # warnings = []
-
-    # constructor
-    def __init__(self, s_top_speed=100):
-        super().__init__()
-        # attribute of instance
-        # public
-        self.top_speed = s_top_speed
-        # private
-        self.__warnings = []
-
-    def __repr__(self):
-        print('Printing...')
-        return 'Top speed: {}, Warnings: {}'.format(self.top_speed, len(self.__warnings))
-
-    def add_warning(self, warning_text):
-        self.__warnings.append(warning_text)
-
-    def get_warning(self):
-        return self.__warnings
-
-    # Self represent instance of the class
-    def drive(self):
-        print('Broonnnnnnnnnnnnnnnn {} kph'.format(self.top_speed))
-
-  ############### Car.py
-
-  from vehicle import Vehicle
-
-
-  class Car(Vehicle):
-      def __init__(self, s_top_speed=100):
-          # Access to the base class
-          super().__init__(s_top_speed)
-
-      def print_looks(self):
-          print('Looks what the nice car is..')
-
+  # Self represent instance of the class
+  def drive(self):
+      print('Broonnnnnnnnnnnnnnnn {} kph'.format(self.top_speed))
 
   car1 = Car()
   car1.drive()
@@ -591,13 +692,104 @@ print('done!')
   # print(car2.__dict__)  # Print attribute as dictionary
   print(car2.get_warning())
 
-  ############### Bus.py
+```
 
-  from vehicle import Vehicle
+#### VS Dict
 
-  class Bus(Vehicle):
-      def __init__(self, s_top_speed=100):
-          super().__init__(s_top_speed)
+Can hold data as object, not based on blueprint
+
+#### Why need OOP
+
+Structured and created quickly, Also include method not just a field and allow to write clean code
+
+OOP example with inheritance
+
+```python
+############### Vehicle.py
+
+class Vehicle:
+  # Class attributes
+  # top_speed = 100
+  # warnings = []
+
+  # constructor
+  def __init__(self, s_top_speed=100):
+      super().__init__()
+      # attribute of instance
+      # public
+      self.top_speed = s_top_speed
+      # private
+      self.__warnings = []
+
+  def __repr__(self):
+      print('Printing...')
+      return 'Top speed: {}, Warnings: {}'.format(self.top_speed, len(self.__warnings))
+
+  def add_warning(self, warning_text):
+      self.__warnings.append(warning_text)
+
+  def get_warning(self):
+      return self.__warnings
+
+  # Self represent instance of the class
+  def drive(self):
+      print('Broonnnnnnnnnnnnnnnn {} kph'.format(self.top_speed))
+
+############### Car.py
+
+from vehicle import Vehicle
+
+class Car(Vehicle):
+def **init**(self, s_top_speed=100): # Access to the base class
+super().**init**(s_top_speed)
+
+      def print_looks(self):
+          print('Looks what the nice car is..')
+
+car1 = Car()
+car1.drive()
+
+# car1.warnings.append('Warnings')
+
+car1.add_warning('Warnings')
+
+# print(car1.\_\_warnings) # Cannot called from outside
+
+# print(car1.**dict**) # Print attribute as dictionary
+
+# print(car1.top_speed.**str**()) # String output
+
+# print(car1.**repr**()) # General output
+
+print(car1) # General output like above
+print(car1.get_warning())
+
+print('#########')
+
+# Directly attach the class, Should not do
+
+# Need to make it effect only an instance
+
+# Car.top_speed = 200
+
+# car1.warnings.append('Warnings')
+
+car2 = Car(200)
+car2.drive()
+
+# print(car2.\_\_warnings)
+
+# print(car2.**dict**) # Print attribute as dictionary
+
+print(car2.get_warning())
+
+############### Bus.py
+
+from vehicle import Vehicle
+
+class Bus(Vehicle):
+def **init**(self, s_top_speed=100):
+super().**init**(s_top_speed)
 
           # attribute of instance
           # public
@@ -609,36 +801,35 @@ print('done!')
       def add_group(self, passenger):
           self.passengers.append(passenger)
 
+bus1 = Bus(80)
+bus1.add_group(['A', 'B', 'C'])
+print(bus1.passengers)
 
-  bus1 = Bus(80)
-  bus1.add_group(['A', 'B', 'C'])
-  print(bus1.passengers)
+```
 
+### Instance vs Class vs Static methods & attibutes
 
-  ```
+Instance: like before section
+Class: no new object instance, follow example
 
-  **Instance vs Class vs Static methods & attibutes**
-  Instance: like before section
-  Class: no new object instance, follow example
+```python
+  class Test:
+    result = 1
+    @classmethod # Decorator - use for change behavior or something
+    def add(cls, a):
+      return cls.result + a
 
-  ```python
-    class Test:
-      result = 1
-      @classmethod # Decorator - use for change behavior or something
-      def add(cls, a):
-        return cls.result + a
+  Test.add(3) # return 4
+```
 
-    Test.add(3) # return 4
-  ```
+Static: cannot access method from inside
 
-  Static: cannot access method from inside
+```python
+  class Test:
+    result = 1 # cannot access method from inside
+    @staticmethod # Decorator
+    def add(a):
+      return a
 
-  ```python
-    class Test:
-      result = 1 # cannot access method from inside
-      @staticmethod # Decorator
-      def add(a):
-        return a
-
-    Test.add(3) # return 3
-  ```
+  Test.add(3) # return 3
+```
