@@ -1,4 +1,4 @@
-from hashutil import hash_block, hs256
+from utils.hashutil import hash_block, hs256
 
 DIFFICULTY = 2
 

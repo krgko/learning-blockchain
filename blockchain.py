@@ -1,5 +1,5 @@
 from functools import reduce
-from hashutil import hash_block
+from utils.hashutil import hash_block
 import hashlib as hl
 import json
 import pickle
@@ -8,7 +8,7 @@ import pickle
 from block import Block
 
 from transaction import Transaction
-from verification import Verification
+from utils.verification import Verification
 
 # Ensure that order correct
 from collections import OrderedDict

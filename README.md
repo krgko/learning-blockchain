@@ -72,6 +72,7 @@ python3 node.py
     - [Instance vs Class vs Static methods & attibutes](#instance-vs-class-vs-static-methods--attibutes)
     - [Private attribute](#private-attribute)
     - [Attribute vs Properties](#attribute-vs-properties)
+    - [The Modules](#the-modules)
 
 ## Requirement
 
@@ -894,3 +895,22 @@ class B:
   def name(self, val):
     self.__name = val
 ```
+
+### The Modules
+
+When need to separate source into its folder. Let's getting knows `Modules`
+
+```bash
+├── blockchain.py
+├── block.py
+├── node.py
+├── README.md
+├── transaction.py
+└── utils
+    ├── hashutil.py
+    ├── __init__.py
+    ├── printable.py
+    └── verification.py
+```
+
+Such `utils` folder. To make it know: add `__init__.py`
