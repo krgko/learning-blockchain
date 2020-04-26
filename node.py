@@ -103,5 +103,7 @@ class Node:
         print('Finished')
 
 
-node = Node()
-node.listen_for_input()
+# If need to import somewhere
+if __name__ == '__main__':
+    node = Node()
+    node.listen_for_input()

@@ -1,3 +1,5 @@
+"""Provide verification helper methods."""
+
 from utils.hashutil import hash_block, hs256
 
 DIFFICULTY = 2

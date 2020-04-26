@@ -15,6 +15,8 @@ python3 node.py
   - [Requirement](#requirement)
   - [REPL](#repl)
   - [Blockchain](#blockchain)
+    - [Properties](#properties)
+    - [Security layer](#security-layer)
   - [Proof of work](#proof-of-work)
     - [Process](#process)
     - [Cheating](#cheating)
@@ -73,10 +75,14 @@ python3 node.py
     - [Private attribute](#private-attribute)
     - [Attribute vs Properties](#attribute-vs-properties)
     - [The Modules](#the-modules)
+    - [pycache](#pycache)
+    - [Controlling exports](#controlling-exports)
+    - [Special variable **name**](#special-variable-name)
 
 ## Requirement
 
-1. Python
+1. Python 3.x
+2. Time
 
 ## REPL
 
@@ -95,7 +101,8 @@ Command line approch contains with
   3. amount/data
 - **Blocks:** wrapper transaction(s) with header and append to chain - occur by mining (put transactions and pack as block)
 - **Blockchain:** multiple block that appended start from first block(genesis block) like chain (data structure like link-list)
-- **Hash:** use for reference block like an id. it stored on header of block(previous hase, current hash) - **Why hash needed in blockchain**: if need to verify using previous transaction as chain there are many transactions and it very long so hashing can help to represent data to strings for using in verify step
+- **Hash:** use for reference block like an id. it stored on header of block(previous hase, current hash)
+  - **Why hash needed in blockchain**: if need to verify using previous transaction as chain there are many transactions and it very long so hashing can help to represent data to strings for using in verify step
 - **Nonce (Number Used Once):** use for prevent replay request for PoW it used to check validity for miner who won puzzle solving as well
 - **Merkle Tree (data structure)** - use to check correctly of transaction in block and make sure that does not modified (a.k.a checksum) - some blockchain generate hash from merkle root
 - **Data structure** - maybe key-store, ...
@@ -103,6 +110,19 @@ Command line approch contains with
 - **Maniplate the chain** the blockchain does not allow to modify some data on the chain and the chain will invalid
 - **Blockchain verification** It use hash that calculate each block this will ensure that chain cannot manipulated
 - **To verify block hashes** Can check by try to create another set of hash as current_hash and reconcile with previous_hash
+- **Private key and Public key** Used for manipulated data (for prevent change from unauthorized user), also for construct wallet. The private key use for sign transaction as signature. And The public key used to verify transaction that created by private key
+
+### Properties
+
+- Immutability: Cannot be mutate
+- Decentralized: Support running on multiple parties with the same context of storage
+- Transparency: Every block can verify and broadcast publicly
+
+### Security layer
+
+- Block know each other: Manipulated check - Check previous hash
+- Mine block require by [PoW](#proof-of-work): No mass production allowed
+- Transaction need to be signed
 
 ## Proof of work
 
@@ -914,3 +934,47 @@ When need to separate source into its folder. Let's getting knows `Modules`
 ```
 
 Such `utils` folder. To make it know: add `__init__.py`
+
+### pycache
+
+It help to compile the code faster. Any change it will recompiled and store in `__pycache__`
+
+### Controlling exports
+
+In python, nothing private
+
+- `_variable` to tell python not to import it when use `import \*`
+- `__all__` to control exports when use `import \*`
+
+```py
+# try to import
+import utils.hash_util
+dir(utils.hash_util)
+# ['__builtins__', '__cached__', '__doc__', '__file__', '__loader__', '__name__', '__package__', '__spec__', 'hash_block', 'hl', 'hs256', 'json']
+
+__all__ = ['hash_block', 'hl', 'hs256'] # Will not found json when
+# from utils.hash_util import *
+```
+
+Apply this into `__init__.py`
+
+```py
+from utils.hashutil import hs256
+
+__all__ = ['hs256']
+
+# When
+# from utils import *
+# Will got only hs256
+```
+
+### Special variable **name**
+
+`__name__` -> When add into dir that run file will return `__main__`, When add to other file will return `filename`
+
+```py
+# This will help when this file can be import somewhere and reuse for import also
+if __name__ == '__main__':
+    node = Node()
+    node.listen_for_input()
+```
