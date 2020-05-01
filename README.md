@@ -81,8 +81,50 @@ python3 node.py
 
 ## Requirement
 
-1. Python 3.x
-2. Time
+1. Python 3.x (Suggest `pyenv`)
+2. Package manager `pip` but use `anaconda` for this project
+3. Time to learning
+
+## Install conda
+
+Can be install natively and download program from [anaconda-products](https://www.anaconda.com/products/individual)
+
+To Create Virtual Env can do freely by GUI but except windoes with `wsl`
+
+```bash
+# For wsl
+
+cd /tmp
+curl -O https://repo.anaconda.com/archive/Anaconda3-2019.03-Linux-x86_64.sh
+sha256sum Anaconda3-2019.03-Linux-x86_64.sh # 45c851b7497cc14d5ca060064394569f724b67d9b5f98a926ed49b834a6bb73a  Anaconda3-2019.03-Linux-x86_64.sh
+bash Anaconda3-2019.03-Linux-x86_64.sh
+
+# Add this line to .zshrc or .bashrc
+export PATH="/home/kowpun/anaconda3/bin:$PATH"
+```
+
+```bash
+# Create virtualenv name goofcoin
+conda create -n goofcoin python=3.7.6 anaconda
+
+# Activate virtualenv
+source activate goofcoin
+
+# Install pkg
+conda install -n goofcoin [package]
+
+# Deactivate virtualenv
+source deactivate
+
+# Remove
+conda remove -n goofcoin -all
+```
+
+## If stand to use pip
+
+```bash
+pip3 install -r requirements.txt
+```
 
 ## REPL
 

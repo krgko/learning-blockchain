@@ -194,6 +194,10 @@ class Blockchain:
             :amount: The amount of coins (default=1.0)
         """
 
+        # Not allow if None
+        if self.node_id == None:
+            return False
+
         # transaction = {
         #     'sender': sender,
         #     'recipient': recipient,
@@ -216,6 +220,11 @@ class Blockchain:
     def mine_block(self):
         """ Mine block will append block to blockchain
         """
+
+        # Not allow if None
+        if self.node_id == None:
+            return False
+
         last_block = self.__chain[-1]
         hashed_block = hash_block(last_block)
         # proof before add reward transaction

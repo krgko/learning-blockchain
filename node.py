@@ -1,12 +1,14 @@
 from uuid import uuid4
 from blockchain import Blockchain
 from utils.verification import Verification
+from wallet import Wallet
 
 
 class Node:
     def __init__(self):
-        self.id = str(uuid4())
-        self.blockchain = Blockchain(self.id)
+        self.wallet = Wallet()
+        # self.id = str(uuid4())
+        self.blockchain = None
 
     def get_transaction_value(self):
         """ Returns the input of the user (new transaction amount) as a float """
@@ -27,6 +29,8 @@ class Node:
         print('3: Output the blockchain blocks')
         print('3f: Output the blockchain blocks - full block')
         print('4: Check transaction validlity')
+        print('5: Create wallet')  # create priv and pub
+        print('6: Load wallet')
         # print('h: Manipulate the chain')
         print('q: Quit')
 
@@ -59,13 +63,14 @@ class Node:
                 # like destructure of javascript
                 recipient, amount = self.get_transaction_value()
                 # add the transaction to blockchain
-                if self.blockchain.add_transaction(recipient=recipient, sender=self.id, amount=amount):
+                if self.blockchain.add_transaction(recipient=recipient, sender=self.wallet.public_key, amount=amount):
                     print('Added transaction')
                 else:
                     print('Transaction failed')
                 print(self.blockchain.get_open_transactions())
             elif user_choice == '2':
-                self.blockchain.mine_block()
+                if not self.blockchain.mine_block():
+                    print("Minine failed. No wallet attached")
                 # Do it on blockchain class is make more sense
                 # open_transactions = []
                 # self.blockchain.save_data()
@@ -86,6 +91,12 @@ class Node:
             #             'index': 0,
             #             'transactions': [{'sender': owner, 'recipient': 'Hacker', 'amount': 100000}]
             #         }
+            elif user_choice == '5':
+                self.wallet.create_keys()
+                # This data will persist per each wallet
+                self.blockchain = Blockchain(self.wallet.public_key)
+            elif user_choice == '6':
+                self.wallet.load_keys()
             elif user_choice == 'q':
                 # change the value to break the loop
                 waiting_for_input = False
@@ -97,7 +108,7 @@ class Node:
                 break
 
             print('Balance of {} is {:.10}'.format(
-                self.id, str(self.blockchain.get_balance(self.id))))
+                self.wallet.public_key, str(self.blockchain.get_balance(self.wallet.public_key))))
         else:
             print('User left!')
         print('Finished')
