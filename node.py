@@ -31,6 +31,7 @@ class Node:
         print('4: Check transaction validlity')
         print('5: Create wallet')  # create priv and pub
         print('6: Load wallet')
+        print('7: Save wallet')
         # print('h: Manipulate the chain')
         print('q: Quit')
 
@@ -97,6 +98,9 @@ class Node:
                 self.blockchain = Blockchain(self.wallet.public_key)
             elif user_choice == '6':
                 self.wallet.load_keys()
+                self.blockchain = Blockchain(self.wallet.public_key)
+            elif user_choice == '7':
+                self.wallet.save_keys()
             elif user_choice == 'q':
                 # change the value to break the loop
                 waiting_for_input = False
@@ -106,9 +110,11 @@ class Node:
                 self.print_blocks()
                 print('Invalid chain!')
                 break
-
+            
+            print('\n')
             print('Balance of {} is {:.10}'.format(
                 self.wallet.public_key, str(self.blockchain.get_balance(self.wallet.public_key))))
+            print('\n')
         else:
             print('User left!')
         print('Finished')
