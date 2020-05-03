@@ -12,6 +12,7 @@ from utils.verification import Verification
 
 # Ensure that order correct
 from collections import OrderedDict
+from wallet import Wallet
 
 MINING_REWARD = 10
 
@@ -208,7 +209,9 @@ class Blockchain:
         #     [('sender', sender), ('recipient', recipient), ('amount', amount)])
         transaction = Transaction(
             sender, recipient, signature, amount)
-        # get_balance will be reference
+        if not Wallet.verify_transaction(transaction):
+            return False
+            # get_balance will be reference
         if Verification.verify_transaction(transaction, self.get_balance):
             self.__open_transactions.append(transaction)
             # participants.add(sender)
@@ -250,6 +253,9 @@ class Blockchain:
         # }
         block = Block(len(self.__chain), hashed_block,
                       copied_transactions, proof)
+        for tx in block.transactions:
+            if not Wallet.verify_transaction(tx):
+                return False
         self.__chain.append(block)
         self.__open_transactions = []
         self.save_data()

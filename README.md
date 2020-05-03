@@ -153,6 +153,7 @@ Command line approch contains with
 - **Blockchain verification** It use hash that calculate each block this will ensure that chain cannot manipulated
 - **To verify block hashes** Can check by try to create another set of hash as current_hash and reconcile with previous_hash
 - **Private key and Public key** Used for manipulated data (for prevent change from unauthorized user), also for construct wallet. The private key use for sign transaction as signature. And The public key used to verify transaction that created by private key
+- **Try to modify open transaction** If try to modify open transaction by changing amount -> when apply signing transaction it will check hash if equal will push to block but if not it will reject transaction. Fix by remove transaction
 
 ### Properties
 
