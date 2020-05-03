@@ -75,7 +75,7 @@ class Blockchain:
                     # Make data like before store
                     for block in blockchain:
                         converted_txs = [Transaction(
-                            tx['sender'], tx['recipient'], tx['amount']) for tx in block['transactions']]
+                            tx['sender'], tx['recipient'], tx['signature'], tx['amount']) for tx in block['transactions']]
                         updated_block = Block(
                             block['index'], block['previous_hash'], converted_txs, block['proof'], block['timestamp'])
                         updated_blockchain.append(updated_block)
@@ -84,7 +84,7 @@ class Blockchain:
                     updated_transactions = []
                     for tx in open_transactions:
                         updated_transaction = Transaction(
-                            tx['sender'], tx['recipient'], tx['amount'])
+                            tx['sender'], tx['recipient'], tx['signature'], tx['amount'])
                         updated_transactions.append(updated_transaction)
                     self.__open_transactions = updated_transactions
                     # blockchain = file_content['chain']
@@ -185,7 +185,7 @@ class Blockchain:
 
     # add default variable like javascript
 
-    def add_transaction(self, recipient, sender, amount=1.0):
+    def add_transaction(self, recipient, sender, signature, amount=1.0):
         """ Append a new value to the blockchain
 
         Arguments:
@@ -207,7 +207,7 @@ class Blockchain:
         # transaction = OrderedDict(
         #     [('sender', sender), ('recipient', recipient), ('amount', amount)])
         transaction = Transaction(
-            sender, recipient, amount)
+            sender, recipient, signature, amount)
         # get_balance will be reference
         if Verification.verify_transaction(transaction, self.get_balance):
             self.__open_transactions.append(transaction)
@@ -237,7 +237,7 @@ class Blockchain:
         # reward_transaction = OrderedDict(
         #     [('sender', 'MINING'), ('recipient', owner), ('amount', MINING_REWARD)])
         reward_transaction = Transaction(
-            'MINING', self.node_id, MINING_REWARD)
+            'MINING', self.node_id, '', MINING_REWARD)
 
         # we don't modify master data so, we need to copy it
         copied_transactions = self.__open_transactions[:]

@@ -24,11 +24,12 @@ class Node:
     def print_instructions(self):
         """ Print instructions for user """
         print('Please choose')
-        print('1: Add a new transaction value')
-        print('2: Mine a new block')
-        print('3: Output the blockchain blocks')
-        print('3f: Output the blockchain blocks - full block')
-        print('4: Check transaction validlity')
+        if self.wallet.public_key != None:
+            print('1: Add a new transaction value')
+            print('2: Mine a new block')
+            print('3: Output the blockchain blocks')
+            print('3f: Output the blockchain blocks - full block')
+            print('4: Check transaction validlity')
         print('5: Create wallet')  # create priv and pub
         print('6: Load wallet')
         print('7: Save wallet')
@@ -60,11 +61,17 @@ class Node:
         while waiting_for_input:
             self.print_instructions()
             user_choice = self.get_user_choice()
+            if (self.wallet.public_key == None) and (user_choice in ['1', '2', '3', '4', '3f']):
+                print("Please create wallet or load wallet before do anythings")
+                continue
+
             if user_choice == '1':
                 # like destructure of javascript
                 recipient, amount = self.get_transaction_value()
                 # add the transaction to blockchain
-                if self.blockchain.add_transaction(recipient=recipient, sender=self.wallet.public_key, amount=amount):
+                signature = self.wallet.sign_transaction(
+                    self.wallet.public_key, recipient, amount)
+                if self.blockchain.add_transaction(recipient=recipient, sender=self.wallet.public_key, signature=signature, amount=amount):
                     print('Added transaction')
                 else:
                     print('Transaction failed')
@@ -106,15 +113,14 @@ class Node:
                 waiting_for_input = False
             else:
                 print('Please input a valid input from choice')
-            if not Verification.verify_chain(self.blockchain.chain):
+            if (user_choice != 'q') and (not Verification.verify_chain(self.blockchain.chain)):
                 self.print_blocks()
                 print('Invalid chain!')
                 break
-            
-            print('\n')
-            print('Balance of {} is {:.10}'.format(
-                self.wallet.public_key, str(self.blockchain.get_balance(self.wallet.public_key))))
-            print('\n')
+
+            if (user_choice not in ['q', '3', '4']) and (self.wallet.public_key != None):
+                print('Balance of {} is {:.10}'.format(
+                    self.wallet.public_key, str(self.blockchain.get_balance(self.wallet.public_key))))
         else:
             print('User left!')
         print('Finished')
