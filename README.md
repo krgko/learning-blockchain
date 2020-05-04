@@ -1021,3 +1021,40 @@ if __name__ == '__main__':
     node = Node()
     node.listen_for_input()
 ```
+
+## Basic http request
+
+```bash
+                GET,POST,DELETE (Remove data),PATCH (Update data),PUT (Replace data) http://host/path
+client ========== Data: Form, JSON =============> Server (Execute logic) : Request
+client <========= Data: HTML, JSON ============== Server (Execute logic) : Response
+```
+
+### Handling HTTP
+
+- Send Request
+  1. Broadcast the change to other node
+  2. Target define for HTTP request
+  3. Client: Browser, Postman
+- Accept Request
+  1. Building web server + web client
+  2. Expose HTTP endpoints => REST API -> Return data as HTML or JSON
+
+### Data formats
+
+- HTML: Understand by browser - `<html> ... </html>`
+- JSON: Known for Javascript and if other else programming language support by using library - `{ 'data': 'any-data' }`
+- Other such as text-file, XML, etc.
+
+### Endpoints
+
+- Blockchain
+  1. `POST /blockchain/mine`: make new block
+  2. `GET /blockchain`: get whole chain
+- Transactions
+  1. `POST /transactions`: add new transaction
+  2. `GET /transactions`: get all open transactions
+- Wallet
+  1. `POST /wallet`: create new wallet
+  2. `GET /wallet`: load an existing wallet
+  3. `GET /wallet/balance`: get wallet balance
