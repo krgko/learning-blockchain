@@ -71,11 +71,12 @@ class Node:
                 # add the transaction to blockchain
                 signature = self.wallet.sign_transaction(
                     self.wallet.public_key, recipient, amount)
+
+                print('Transaction to add:', self.blockchain.get_open_transactions())
                 if self.blockchain.add_transaction(recipient=recipient, sender=self.wallet.public_key, signature=signature, amount=amount):
                     print('Added transaction')
                 else:
                     print('Transaction failed')
-                print(self.blockchain.get_open_transactions())
             elif user_choice == '2':
                 if not self.blockchain.mine_block():
                     print("Minine failed. No wallet attached")
@@ -113,6 +114,7 @@ class Node:
                 waiting_for_input = False
             else:
                 print('Please input a valid input from choice')
+
             if (user_choice != 'q') and (not Verification.verify_chain(self.blockchain.chain)):
                 self.print_blocks()
                 print('Invalid chain!')

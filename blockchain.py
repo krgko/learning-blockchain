@@ -209,9 +209,10 @@ class Blockchain:
         #     [('sender', sender), ('recipient', recipient), ('amount', amount)])
         transaction = Transaction(
             sender, recipient, signature, amount)
-        if not Wallet.verify_transaction(transaction):
-            return False
-            # get_balance will be reference
+        # Do in Verification.verify_transaction
+        # if not Wallet.verify_transaction(transaction):
+        #     return False
+        # get_balance will be reference
         if Verification.verify_transaction(transaction, self.get_balance):
             self.__open_transactions.append(transaction)
             # participants.add(sender)
@@ -244,18 +245,20 @@ class Blockchain:
 
         # we don't modify master data so, we need to copy it
         copied_transactions = self.__open_transactions[:]
+        # Check before append to the block the new transaction
+        # That's why verify copied_transactions exclude MINING block
+        for tx in copied_transactions:
+            if not Wallet.verify_transaction(tx):
+                return False
         copied_transactions.append(reward_transaction)
+        block = Block(len(self.__chain), hashed_block,
+                copied_transactions, proof)
         # block = {
         #     'previous_hash': hashed_block,
         #     'index': len(blockchain),
         #     'transactions': copied_transactions,
         #     'proof': proof
         # }
-        block = Block(len(self.__chain), hashed_block,
-                      copied_transactions, proof)
-        for tx in block.transactions:
-            if not Wallet.verify_transaction(tx):
-                return False
         self.__chain.append(block)
         self.__open_transactions = []
         self.save_data()

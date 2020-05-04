@@ -1,6 +1,7 @@
 """Provide verification helper methods."""
 
 from utils.hashutil import hash_block, hs256
+from wallet import Wallet
 
 DIFFICULTY = 2
 
@@ -34,11 +35,16 @@ class Verification:
         return True
 
     @staticmethod
-    def verify_transaction(transaction, get_balance):
-        sender_balance = get_balance(transaction.sender)
-        return sender_balance >= transaction.amount
+    def verify_transaction(transaction, get_balance, check_funds=True):
+        if check_funds:
+            sender_balance = get_balance(transaction.sender)
+            # Check funds and signature
+            return sender_balance >= transaction.amount and Wallet.verify_transaction(transaction)
+        else:
+            return Wallet.verify_transaction(transaction)
 
     @classmethod
     def verify_transactions(cls, open_transactions, get_balance):
         """ Verify transaction list """
-        return all([cls.verify_transaction(tx, get_balance) for tx in open_transactions])
+        # No need to check fund anymore
+        return all([cls.verify_transaction(tx, get_balance, False) for tx in open_transactions])
