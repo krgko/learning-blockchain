@@ -7,12 +7,17 @@ This project all about learning blockchain with consensus algorithm PoW (Proof o
 ## Start App
 
 ```bash
+# If run this no need to install conda
+pip3 install -r requirements.txt
+
 python3 node.py
 ```
 
 - [Learning blockchain](#learning-blockchain)
   - [Start App](#start-app)
   - [Requirement](#requirement)
+  - [Install conda](#install-conda)
+  - [If stand to use pip](#if-stand-to-use-pip)
   - [REPL](#repl)
   - [Blockchain](#blockchain)
     - [Properties](#properties)
@@ -78,6 +83,11 @@ python3 node.py
     - [pycache](#pycache)
     - [Controlling exports](#controlling-exports)
     - [Special variable **name**](#special-variable-name)
+  - [Basic http request](#basic-http-request)
+    - [Handling HTTP](#handling-http)
+    - [Data formats](#data-formats)
+    - [Endpoints](#endpoints)
+    - [CORS (Cross-Origin Resource Sharing)](#cors-cross-origin-resource-sharing)
 
 ## Requirement
 
@@ -1058,3 +1068,9 @@ client <========= Data: HTML, JSON ============== Server (Execute logic) : Respo
   1. `POST /wallet`: create new wallet
   2. `GET /wallet`: load an existing wallet
   3. `GET /wallet/balance`: get wallet balance
+
+### CORS (Cross-Origin Resource Sharing)
+
+Mechanism to control client running on the same server to access those server's resources when both of things are in different origin. Just add additional headers
+
+[readmore-about-cors](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
