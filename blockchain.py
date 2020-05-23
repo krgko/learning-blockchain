@@ -143,7 +143,10 @@ class Blockchain:
             proof += 1
         return proof
 
-    def get_balance(self, participant):
+    def get_balance(self):
+        if self.node_id == None:
+            return None
+        participant = self.node_id
         tx_sender = [[tx.amount for tx in block.transactions
                       if tx.sender == participant] for block in self.__chain]
         open_tx_sender = [tx.amount
@@ -227,7 +230,7 @@ class Blockchain:
 
         # Not allow if None
         if self.node_id == None:
-            return False
+            return None
 
         last_block = self.__chain[-1]
         hashed_block = hash_block(last_block)
@@ -249,10 +252,10 @@ class Blockchain:
         # That's why verify copied_transactions exclude MINING block
         for tx in copied_transactions:
             if not Wallet.verify_transaction(tx):
-                return False
+                return None
         copied_transactions.append(reward_transaction)
         block = Block(len(self.__chain), hashed_block,
-                copied_transactions, proof)
+                      copied_transactions, proof)
         # block = {
         #     'previous_hash': hashed_block,
         #     'index': len(blockchain),
@@ -262,6 +265,6 @@ class Blockchain:
         self.__chain.append(block)
         self.__open_transactions = []
         self.save_data()
-        return True
+        return block
 
     # duplicate code must to stay as function
