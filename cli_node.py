@@ -122,7 +122,7 @@ class Node:
 
             if (user_choice not in ['q', '3', '4']) and (self.wallet.public_key != None):
                 print('Balance of {} is {:.10}'.format(
-                    self.wallet.public_key, str(self.blockchain.get_balance(self.wallet.public_key))))
+                    self.wallet.public_key, str(self.blockchain.get_balance())))
         else:
             print('User left!')
         print('Finished')

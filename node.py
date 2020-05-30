@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 from blockchain import Blockchain
@@ -71,6 +71,61 @@ def get_balance():
 @app.route("/", methods=['GET'])
 def get_ui():
     return 'UI showing!'
+
+
+@app.route("/transaction", methods=["POST"])
+def add_transaction():
+    if wallet.public_key == None:
+        response = {
+            'message': "No wallet setup"
+        }
+        return jsonify(response), 400
+    # Get input as dict
+    body = request.get_json()
+    if not body:
+        response = {'message': "No data input"}
+        return jsonify(response), 400
+    required_fields = ['recipient', 'amount']
+    # Check required_fields are in json body
+    if not all(field in body for field in required_fields):
+        response = {'message': "Required data is missing"}
+        return jsonify(response), 400
+    # FIXME: Input type validation
+    recipient = body['recipient']
+    amount = int(body['amount'])
+    signature = wallet.sign_transaction(wallet.public_key, recipient, amount)
+    success = blockchain.add_transaction(
+        recipient, wallet.public_key, signature, amount)
+    if success:
+        response = {
+            'message': 'Added transaction success',
+            'transaction': {
+                'sender': wallet.public_key,
+                'recipient': recipient,
+                'amount': amount,
+                'signature': signature,
+            },
+            'funds': blockchain.get_balance(),
+        }
+        return jsonify(response), 201
+    else:
+        response = {
+            'message': 'Added transaction failed'
+        }
+        return jsonify(response), 500
+
+
+@app.route("/transactions", methods=['GET'])
+def get_open_transactions():
+    if wallet.public_key == None:
+        response = {
+            'message': "No wallet setup"
+        }
+        return jsonify(response), 400
+
+    open_transactions = blockchain.get_open_transactions()
+    open_transactions_dict = [tx.__dict__ for tx in open_transactions]
+    return jsonify(open_transactions_dict), 200
 
 
 @app.route("/mine", methods=['POST'])

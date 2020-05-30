@@ -99,7 +99,7 @@ class Blockchain:
             # open_transactions = []
             pass
         finally:
-            print('Start program succeed !!')
+           pass
 
     # When changed to the class it will not declared here
     # load_data()
