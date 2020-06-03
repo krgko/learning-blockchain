@@ -25,6 +25,8 @@ class Blockchain:
         self.__open_transactions = []
         self.load_data()
         self.node_id = node_id
+        # For manage nodes
+        self.__peer_nodes = set()
 
     # # global scope variable - can call by anywhere
     # MINING_REWARD = 10
@@ -90,6 +92,9 @@ class Blockchain:
                     self.__open_transactions = updated_transactions
                     # blockchain = file_content['chain']
                     # open_transactions = file_content['ot']
+                    # new line can enable to load data as array
+                    peer_nodes = json.loads(file_content[2])
+                    self.__peer_nodes = set(peer_nodes)
         except (IOError, IndexError):
             # IndexError will handle if blockchain.txt empty
             # When IOError it still support to create block
@@ -99,7 +104,7 @@ class Blockchain:
             # open_transactions = []
             pass
         finally:
-           pass
+            pass
 
     # When changed to the class it will not declared here
     # load_data()
@@ -130,6 +135,8 @@ class Blockchain:
                 #     'ot': open_transactions
                 # }
                 # f.write(pickle.dumps(save_data))
+                f.write("\n")
+                f.write(json.dumps(list(self.__peer_nodes)))
         except IOError:
             print('Saving chain failed')
 
@@ -268,3 +275,20 @@ class Blockchain:
         return block
 
     # duplicate code must to stay as function
+    def add_peer_node(self, node):
+        """Add a new node to the peer node set
+
+        Arguments:
+            :node: The node URL to add
+        """
+        # Set methods: https://www.w3schools.com/python/python_ref_set.asp
+        self.__peer_nodes.add(node)
+        self.save_data()
+
+    def remove_peer_node(self, node):
+        """Remove a new node to the peer node set
+
+        Arguments:
+            :node: The node URL to remove
+        """
+        self.__peer_nodes.discard()
