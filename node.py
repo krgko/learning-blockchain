@@ -73,6 +73,11 @@ def get_ui():
     return send_from_directory('public', 'index.html')
 
 
+@app.route("/network", methods=['GET'])
+def get_network_ui():
+    return send_from_directory('public', 'network.html')
+
+
 @app.route("/transaction", methods=["POST"])
 def add_transaction():
     if wallet.public_key == None:
@@ -162,6 +167,48 @@ def get_chain():
         dict_block['transactions'] = [
             tx.__dict__ for tx in dict_block["transactions"]]
     return jsonify(dict_chain), 200
+
+
+@app.route("/node", methods=["POST"])
+def add_node():
+    body = request.get_json()
+    if not body:
+        response = {'message': 'No body attached'}
+        return jsonify(response), 400
+    # Check existance of key
+    if 'node' not in body:
+        response = {'message': 'No node data attached'}
+        return jsonify(response), 400
+    node = body['node']
+    # Not required public key of wallet
+    blockchain.add_peer_node(node)
+    response = {
+        'message': 'Node added successfully',
+        'all_nodes': blockchain.get_peer_nodes()
+    }
+    return jsonify(response), 201
+
+
+@app.route("/node/<node_url>", methods=["DELETE"])
+def remove_node(node_url):
+    if node_url == '' or node_url == None:
+        response = {'message': 'No node found'}
+        return jsonify(response), 400
+    blockchain.remove_peer_node(node_url)
+    response = {
+        'message': 'Node removed',
+        'all_nodes': blockchain.get_peer_nodes()
+    }
+    return jsonify(response), 200
+
+
+@app.route("/nodes", methods=["GET"])
+def get_nodes():
+    nodes = blockchain.get_peer_nodes()
+    response = {
+        'all_nodes': nodes
+    }
+    return jsonify(response), 200
 
 
 if __name__ == "__main__":

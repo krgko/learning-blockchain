@@ -23,10 +23,11 @@ class Blockchain:
         # Initialized blockchain list
         self.chain = [self.genesis_block]
         self.__open_transactions = []
-        self.load_data()
         self.node_id = node_id
         # For manage nodes
         self.__peer_nodes = set()
+        # Load after declare variable
+        self.load_data()
 
     # # global scope variable - can call by anywhere
     # MINING_REWARD = 10
@@ -291,4 +292,9 @@ class Blockchain:
         Arguments:
             :node: The node URL to remove
         """
-        self.__peer_nodes.discard()
+        self.__peer_nodes.discard(node)
+        self.save_data()
+
+    def get_peer_nodes(self):
+        """Return a list of all connected peer nodes"""
+        return list(self.__peer_nodes)
