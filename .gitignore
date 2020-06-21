@@ -4,3 +4,5 @@ blockchain.b
 __pycache__
 .pytest_cache
 wallet.txt
+wallet-*.txt
+blockchain-*.txt

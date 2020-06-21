@@ -3,6 +3,7 @@ from utils.hashutil import hash_block
 import hashlib as hl
 import json
 import pickle
+import requests
 
 # Treat all as Block object
 from block import Block
@@ -14,18 +15,20 @@ from utils.verification import Verification
 from collections import OrderedDict
 from wallet import Wallet
 
+# TODO: Mining reward and Difficulty should be stored at blockchain
 MINING_REWARD = 10
 
 
 class Blockchain:
-    def __init__(self, node_id):
-        self.genesis_block = Block(0, '', [], 0)
+    def __init__(self, public_key, node_id):
+        self.genesis_block = Block(0, '', [], 0, 0)
         # Initialized blockchain list
         self.chain = [self.genesis_block]
         self.__open_transactions = []
-        self.node_id = node_id
+        self.public_key = public_key
         # For manage nodes
         self.__peer_nodes = set()
+        self.node_id = node_id
         # Load after declare variable
         self.load_data()
 
@@ -62,7 +65,7 @@ class Blockchain:
         # global open_transactions
 
         try:
-            with open('blockchain.txt', 'r') as f:
+            with open(f'blockchain-{self.node_id}.txt', 'r') as f:
                 # with open('blockchain.b', 'rb') as f:
                 file_content = f.readlines()
                 # file_content_b = f.read()
@@ -112,7 +115,7 @@ class Blockchain:
 
     def save_data(self):
         try:
-            with open('blockchain.txt', 'w') as f:
+            with open(f'blockchain-{self.node_id}.txt', 'w') as f:
                 # Convert object to dict for saving
                 saveable_block = [block.__dict__ for block in [
                     Block(b.index, b.previous_hash, [tx.__dict__ for tx in b.transactions], b.proof, b.timestamp) for b in self.__chain]]
@@ -151,10 +154,13 @@ class Blockchain:
             proof += 1
         return proof
 
-    def get_balance(self):
-        if self.node_id == None:
-            return None
-        participant = self.node_id
+    def get_balance(self, sender=None):
+        if sender == None:
+            if self.public_key == None:
+                return None
+            participant = self.public_key
+        else:
+            participant = sender
         tx_sender = [[tx.amount for tx in block.transactions
                       if tx.sender == participant] for block in self.__chain]
         open_tx_sender = [tx.amount
@@ -197,17 +203,19 @@ class Blockchain:
 
     # add default variable like javascript
 
-    def add_transaction(self, recipient, sender, signature, amount=1.0):
+    def add_transaction(self, recipient, sender, signature, amount=1.0, is_receiving=False):
         """ Append a new value to the blockchain
 
         Arguments:
             :sender: The sender of coins
             :recipient: The recipient of coins
+            :signature: The signature of transaction
             :amount: The amount of coins (default=1.0)
+            :is_receiving: For reusing of method
         """
 
         # Not allow if None
-        if self.node_id == None:
+        if self.public_key == None:
             return False
 
         # transaction = {
@@ -224,20 +232,57 @@ class Blockchain:
         # if not Wallet.verify_transaction(transaction):
         #     return False
         # get_balance will be reference
+
+        # Validate it self then sent to other node to validate with
         if Verification.verify_transaction(transaction, self.get_balance):
             self.__open_transactions.append(transaction)
             # participants.add(sender)
             # participants.add(recipient)
             self.save_data()
+            if not is_receiving:
+                # If does not do this it will broadcast forever
+                for node in list(self.__peer_nodes):
+                    # TODO: Validation for node name when save
+                    url = 'http://{}/broadcast-transaction'.format(node)
+                    # Send an exists data to other nodes
+                    try:
+                        response = requests.post(url, json={
+                            'sender': sender,
+                            'recipient': recipient,
+                            'amount': amount,
+                            'signature': signature,
+                        })
+                        if response.status_code == 400 or response.status_code == 500:
+                            print('Transaction declined, need resolving')
+                            return False
+                    except requests.exceptions.ConnectionError:
+                        print('Cannot connect to peer node')
+                        continue
             return True
         return False
+
+    def add_block(self, block):
+        transactions = [Transaction(
+            tx['sender'], tx['recipient'], tx['signature'], tx['amount']) for tx in block['transactions']]
+        proof_is_valid = Verification.valid_proof(
+            transactions[:-1], block['previous_hash'], block['proof'])
+        hashes_match = hash_block(self.chain[-1]) == block['previous_hash']
+        if not proof_is_valid or not hashes_match:
+            return False
+        # FIXME: Due to this solution the block timestamp should be UTC only for preventing time diff
+        converted_block = Block(
+            block['index'], block['previous_hash'], transactions, block['proof'], block['timestamp'])
+        self.__chain.append(converted_block)
+        self.__open_transactions = [] # TODO: Remove this, temporary fix
+        self.save_data()
+        return True
 
     def mine_block(self):
         """ Mine block will append block to blockchain
         """
 
         # Not allow if None
-        if self.node_id == None:
+        if self.public_key == None:
             return None
 
         last_block = self.__chain[-1]
@@ -252,7 +297,7 @@ class Blockchain:
         # reward_transaction = OrderedDict(
         #     [('sender', 'MINING'), ('recipient', owner), ('amount', MINING_REWARD)])
         reward_transaction = Transaction(
-            'MINING', self.node_id, '', MINING_REWARD)
+            'MINING', self.public_key, '', MINING_REWARD)
 
         # we don't modify master data so, we need to copy it
         copied_transactions = self.__open_transactions[:]
@@ -273,6 +318,21 @@ class Blockchain:
         self.__chain.append(block)
         self.__open_transactions = []
         self.save_data()
+        for node in self.__peer_nodes:
+            url = 'http://{}/broadcast-block'.format(node)
+            converted_block = block.__dict__.copy()
+            # Convert them to dict format
+            converted_block['transactions'] = [tx.__dict__
+                                               for tx in converted_block['transactions']]
+            try:
+                response = requests.post(url, json={
+                    'block': converted_block
+                })
+                if response.status_code == 400 or response.status_code == 500:
+                    print('Block declined, need resolving')
+            except requests.exceptions.ConnectionError:
+                print('Cannot connect to peer node')
+                continue
         return block
 
     # duplicate code must to stay as function
