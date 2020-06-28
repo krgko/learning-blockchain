@@ -2,7 +2,7 @@
 
 This project all about learning blockchain with consensus algorithm PoW (Proof of Work)
 
-> If we understand this we will able to develop blockchain with any language
+> If we understand this we will able to develop blockchain with any language. **Learning purpose only !**
 
 ## Start App
 
@@ -24,6 +24,7 @@ Postman Collection: `https://www.getpostman.com/collections/1d40c4be2f9b55c2b670
   - [Blockchain](#blockchain)
     - [Properties](#properties)
     - [Security layer](#security-layer)
+    - [Consensus mechanism](#consensus-mechanism)
   - [Proof of work](#proof-of-work)
     - [Process](#process)
     - [Cheating](#cheating)
@@ -59,7 +60,7 @@ Postman Collection: `https://www.getpostman.com/collections/1d40c4be2f9b55c2b670
     - [Enumerate](#enumerate)
     - [Copiled other complex type](#copiled-other-complex-type)
     - [Shallow vs deep copies](#shallow-vs-deep-copies)
-    - [is and ==](#is-and)
+    - [is and ==](#is-and-)
     - [All and Any](#all-and-any)
     - [Comparison between data structures (python)](#comparison-between-data-structures-python)
     - [List comprehension](#list-comprehension)
@@ -90,6 +91,9 @@ Postman Collection: `https://www.getpostman.com/collections/1d40c4be2f9b55c2b670
     - [Data formats](#data-formats)
     - [Endpoints](#endpoints)
     - [CORS (Cross-Origin Resource Sharing)](#cors-cross-origin-resource-sharing)
+  - [PEP8](#pep8)
+  - [Improve the project](#improve-the-project)
+  - [Read more](#read-more)
 
 ## Requirement
 
@@ -178,6 +182,15 @@ Command line approch contains with
 - Block know each other: Manipulated check - Check previous hash
 - Mine block require by [PoW](#proof-of-work): No mass production allowed
 - Transaction need to be signed
+
+### Consensus mechanism
+
+Talk about selected the main chain -> there are criterias. Who matched these criterias they will be selected to the main chain
+
+1. Longest valid chain - Node will broadcast the block and append to chain. Longest chain will be selected to be main chain
+2. Majority in network - If the chain are equal length another criteria will be the chain which hold by mostly node (> 50% of nodes)
+
+Invalid chain will be rolled-back - Let's say those transaction never happened
 
 ## Proof of work
 
@@ -1076,3 +1089,22 @@ client <========= Data: HTML, JSON ============== Server (Execute logic) : Respo
 Mechanism to control client running on the same server to access those server's resources when both of things are in different origin. Just add additional headers
 
 [readmore-about-cors](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
+
+## PEP8
+
+Styling guide for python [pep8](https://www.python.org/dev/peps/pep-0008/). If use VSCode it will enable by default -> Auto format them
+
+## Improve the project
+
+- See FIXME and TODO
+- Better error handling -> catch more error type and send feedback to user
+- Improve scalability for large network like bitcoin, ethereum, change from file to database, support download full-chain or partial-chain
+- Improve broadcasting with `asyncio` (just example) -> do async
+- Control by global config for network such as difficulty -> everyone should know (automated increase like bitcoin)
+- Add Merkel Tree for transaction and validation
+
+## Read more
+
+- [PythonDataScienceHandbook](https://jakevdp.github.io/PythonDataScienceHandbook/)
+- [blockchain-python-tutorial](https://github.com/adilmoujahid/blockchain-python-tutorial)
+- [merkel-tree](https://www.mycryptopedia.com/merkle-tree-merkle-root-explained/)

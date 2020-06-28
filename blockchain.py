@@ -29,6 +29,8 @@ class Blockchain:
         # For manage nodes
         self.__peer_nodes = set()
         self.node_id = node_id
+        # No need to resolve conflicts
+        self.resolve_conflicts = False
         # Load after declare variable
         self.load_data()
 
@@ -273,7 +275,17 @@ class Blockchain:
         converted_block = Block(
             block['index'], block['previous_hash'], transactions, block['proof'], block['timestamp'])
         self.__chain.append(converted_block)
-        self.__open_transactions = [] # TODO: Remove this, temporary fix
+        # Update open transactions on peer node when add_block
+        stored_transactions = self.__open_transactions[:]
+        for incoming_tx in block['transactions']:
+            for opentx in stored_transactions:
+                if opentx.sender == incoming_tx['sender'] and opentx.recipient == incoming_tx['recipient']:
+                    try:
+                        # Remove with an exact match key
+                        self.__open_transactions.remove(opentx)
+                    except ValueError:
+                        print('Open transaction was removed')
+        # self.__open_transactions = [] # Might be another way
         self.save_data()
         return True
 
@@ -330,10 +342,43 @@ class Blockchain:
                 })
                 if response.status_code == 400 or response.status_code == 500:
                     print('Block declined, need resolving')
+                if response.status_code == 409:
+                    self.resolve_conflicts = True
             except requests.exceptions.ConnectionError:
                 print('Cannot connect to peer node')
                 continue
         return block
+
+    def resolve(self):
+        """Sync the blockchain with other node when it does not conflict
+        """
+        # FIXME: Should be compare with all node within the network and trust the majority nodes, also automatically download peer_nodes | Better to do this when start node
+        main_chain = self.chain
+        replace = False
+        # Dump data from any block
+        for node in self.__peer_nodes:
+            url = 'http://{}/chain'.format(node)
+            try:
+                response = requests.get(url)
+                node_chain = response.json()  # Return a list
+                node_chain = [Block(block['index'], block['previous_hash'],
+                                    [Transaction(
+                                        tx['sender'], tx['recipient'], tx['signature'], tx['amount']) for tx in block['transactions']], block['proof'], block['timestamp']) for block in node_chain]
+                node_chain_length = len(node_chain)
+                local_chain_length = len(self.chain)
+                # If longer means local chain is invalid, else use current chain
+                if node_chain_length > local_chain_length and Verification.verify_chain(node_chain):
+                    main_chain = node_chain
+                    replace = True  # Indicate the chain does not valid so transaction will not appended to block and block will not appended to chain
+            except requests.exceptions.ConnectionError:
+                continue
+        self.resolve_conflicts = False
+        self.chain = main_chain
+        if replace:
+            # Reset the open transaction which is append to block of invalid chain
+            self.__open_transactions = []
+        self.save_data()
+        return replace
 
     # duplicate code must to stay as function
     def add_peer_node(self, node):

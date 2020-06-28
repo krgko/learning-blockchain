@@ -174,9 +174,13 @@ def broadcast_block():
             return jsonify(response), 201
         else:
             response = {'message': 'Block invalid'}
-            return jsonify(response), 500
+            return jsonify(response), 409
     elif block['index'] > blockchain.chain[-1].index:
-        pass
+        # Blockchain shorter than current blockchain
+        response = {
+            'message': 'Blockchain differ from current blockchain'}
+        blockchain.resolve_conflicts = True
+        return jsonify(response), 200  # Not a problem
     else:
         response = {
             'message': 'Cannot add a block with index newer than the current block'}
@@ -198,6 +202,12 @@ def get_open_transactions():
 
 @app.route("/mine", methods=['POST'])
 def mine():
+    # FIXME: Every loaded wallet the state will be cleared -> can attack like load-wallet, mine until blockchain longer than main blockchain
+    if blockchain.resolve_conflicts:
+        response = {
+            'message': 'Resolve conflicts first, block cannot added'
+        }
+        return jsonify(response), 409
     # If does not have public_key it will failed
     block = blockchain.mine_block()
     if block is not None:
@@ -217,6 +227,16 @@ def mine():
             'wallet_set_up': wallet.public_key != None
         }
         return jsonify(response), 500
+
+
+@app.route("/resolve-conflicts", methods=["POST"])
+def resolve_conflicts():
+    replaced = blockchain.resolve()
+    if replaced:
+        response = {'message': 'Chain was replaced'}
+    else:
+        response = {'message': 'Using local chain'}
+    return jsonify(response), 200
 
 
 @app.route("/chain", methods=["GET"])
