@@ -13,7 +13,7 @@ pip3 install -r requirements.txt
 python3 node.py
 ```
 
-## Steps
+## Demo Steps
 
 1. Start the first node then get into <http://localhost:5000>
 2. Create a new wallet
@@ -23,6 +23,8 @@ python3 node.py
 6. You can copy the public key and then put into recipient key with amount of the coin
 7. Click "Mine A Block" to create a block -> you will get reward with 10 coins
 8. On the recipient side, you need to load the wallet to see the updated balance.
+
+-----
 
 Postman Collection: `https://www.getpostman.com/collections/1d40c4be2f9b55c2b670`
 
