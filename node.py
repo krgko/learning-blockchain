@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request, send_from_directory
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 
 from blockchain import Blockchain
 from wallet import Wallet
@@ -7,7 +7,7 @@ from wallet import Wallet
 # Pass application name to tell context name to Flask
 app = Flask(__name__)
 
-CORS(app)
+CORS(app, supports_credentials=True)
 
 # TODO: Support totally multiple node on difference device
 
@@ -36,6 +36,7 @@ def create_keys():
 def load_keys():
     if wallet.load_keys():
         global blockchain
+        print(wallet.public_key)
         blockchain = Blockchain(wallet.public_key, port)
         response = {
             'public_key': wallet.public_key,
@@ -79,6 +80,7 @@ def get_network_ui():
 
 
 @app.route("/broadcast-transaction", methods=['POST'])
+@cross_origin()
 def broadcast_transaction():
     values = request.get_json()
     if not values:
